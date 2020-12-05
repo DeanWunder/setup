@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [[ $(id -u) -ne 0 ]]; then
+    echo "Not running as root."
+    exit
+fi
+echo "Setting up Dean's nice defaults"
+
+# Do some things as root first.
+sudo apt-get --assume-yes install vim > /dev/null
+sudo apt-get --assume-yes install git > /dev/null
+
+# SSH
+echo "Setting up SSH configuration"
+rm /home/dean/.ssh/config > /dev/null
+su -c "ln -s setup/ssh_config /home/dean/.ssh/config" dean > /dev/null
+
+echo "Generating a new SSH Key"
+su -c ssh-keygen dean
+echo "Add this SSH key to git accounts"
+cat /home/dean/.ssh/id_rsa.pub
+
+# Vim
+rm /home/dean/.vimrc > /dev/null
+su -c "ln -s setup/vimrc /home/dean/.vimrc" dean > /dev/null
+
+# Git
+echo "Setting email and name for git config"
+git config --global user.email "deanwunder@gmail.com"
+git config --global user.name "Dean Wunder"
+
