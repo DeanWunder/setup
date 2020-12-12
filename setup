@@ -9,6 +9,7 @@ echo "Setting up Dean's nice defaults"
 # Do some things as root first.
 sudo apt-get --assume-yes install vim > /dev/null
 sudo apt-get --assume-yes install git > /dev/null
+sudo apt-get --assume-yes install tmux > /dev/null
 
 # SSH
 echo "Setting up SSH configuration"
