@@ -7,7 +7,7 @@ fi
 echo "Setting up Dean's nice defaults"
 
 # Do some things as root first.
-for program in vim git tmux python3-pip gdebi
+for program in vim git tmux python3-pip gdebi gcc
 do
     sudo apt-get --assume-yes install $program > /dev/null
 done
@@ -28,6 +28,6 @@ su -c "ln -s setup/vimrc /home/dean/.vimrc" dean > /dev/null
 
 # Git
 echo "Setting email and name for git config"
-git config --global user.email "deanwunder@gmail.com"
-git config --global user.name "Dean Wunder"
+su -c "git config --global user.email \"deanwunder@gmail.com\"" dean
+su -c "git config --global user.name \"Dean Wunder\"" dean
 
