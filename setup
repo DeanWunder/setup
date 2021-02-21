@@ -6,7 +6,7 @@ if [[ $(id -u) -ne 0 ]]; then
 fi
 echo "Setting up Dean's nice defaults"
 
-# Do some things as root first.
+# Install packages as root first.
 for program in vim git tmux python3-pip gdebi gcc
 do
     sudo apt-get --assume-yes install $program > /dev/null
@@ -30,4 +30,9 @@ su -c "ln -s setup/vimrc /home/dean/.vimrc" dean > /dev/null
 echo "Setting email and name for git config"
 su -c "git config --global user.email \"deanwunder@gmail.com\"" dean
 su -c "git config --global user.name \"Dean Wunder\"" dean
+
+# Custom binaries
+echo "Setting up custom home directory binaries"
+su -c "ln -s bin /home/dean/bin" dean
+
 
