@@ -7,7 +7,7 @@ fi
 echo "Setting up Dean's nice defaults"
 
 # Install packages as root first.
-for program in vim git tmux python3-pip gdebi gcc sqlite3
+for program in vim git tmux python3-pip gdebi gcc sqlite3 curl
 do
     sudo apt-get --assume-yes install $program > /dev/null
 done
