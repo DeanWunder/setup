@@ -17,14 +17,20 @@ echo "Setting up SSH configuration"
 rm /home/dean/.ssh/config > /dev/null
 su -c "ln -s setup/ssh_config /home/dean/.ssh/config" dean > /dev/null
 
-echo "Generating a new SSH Key"
-su -c ssh-keygen dean
-echo "Add this SSH key to git accounts"
-cat /home/dean/.ssh/id_rsa.pub
+if test -f "/home/dean/.ssh/id_rsa.pub"; then
+    echo "Generating a new SSH Key"
+    #su -c ssh-keygen dean
+    echo "Add this SSH key to git accounts"
+    cat /home/dean/.ssh/id_rsa.pub
+fi
 
 # Vim
 rm /home/dean/.vimrc > /dev/null
-su -c "ln -s setup/vimrc /home/dean/.vimrc" dean > /dev/null
+su -c "ln -s /home/dean/setup/vimrc /home/dean/.vimrc" dean > /dev/null
+
+# Bash
+rm /home/dean/.bashrc > /dev/null
+su -c "ln -s /home/dean/setup/bashrc /home/dean/.bashrc" dean > /dev/null
 
 # Git
 echo "Setting email and name for git config"
@@ -33,6 +39,6 @@ su -c "git config --global user.name \"Dean Wunder\"" dean
 
 # Custom binaries
 echo "Setting up custom home directory binaries"
-su -c "ln -s bin /home/dean/bin" dean
+su -c "ln -s /home/dean/setup/bin /home/dean/bin" dean
 
 
