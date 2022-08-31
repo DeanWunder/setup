@@ -12,6 +12,8 @@ set shiftwidth=4
 set hlsearch
 " show line numbers
 set number
+" prevent line numbers from being selected
+set mouse=a
 
 set nolist
 
