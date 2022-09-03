@@ -1,10 +1,19 @@
 #!/bin/bash
 
+echo "Enter user:"
+read USERNAME
+echo "Enter email:"
+read EMAIL
+HOME_USER="/home/$USERNAME"
+echo $HOME_USER
+
 if [[ $(id -u) -ne 0 ]]; then
     echo "Not running as root."
     exit
 fi
 echo "Setting up Dean's nice defaults"
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # Install packages as root first.
 for program in vim git tmux python3-pip python3-venv gdebi gcc sqlite3 curl
@@ -14,31 +23,32 @@ done
 
 # SSH
 echo "Setting up SSH configuration"
-rm /home/dean/.ssh/config > /dev/null
-su -c "ln -s setup/ssh_config /home/dean/.ssh/config" dean > /dev/null
+rm $HOME_USER/.ssh/config > /dev/null
+su -c "ln -s $SCRIPT_DIR/ssh_config $HOME_USER/.ssh/config" $USERNAME > /dev/null
 
-if test -f "/home/dean/.ssh/id_rsa.pub"; then
-    echo "Generating a new SSH Key"
-    #su -c ssh-keygen dean
+if test ! -f "$HOME_USER/.ssh/id_rsa.pub"; then
+    #echo "Generating a new SSH Key"
+    #su -c ssh-keygen $HOME_USER
     echo "Add this SSH key to git accounts"
-    cat /home/dean/.ssh/id_rsa.pub
+    cat $HOME_USER/.ssh/id_rsa.pub
 fi
 
 # Vim
-rm /home/dean/.vimrc > /dev/null
-su -c "ln -s /home/dean/setup/vimrc /home/dean/.vimrc" dean > /dev/null
+rm $HOME_USER/.vimrc > /dev/null
+su -c "ln -s $SCRIPT_DIR/vimrc $HOME_USER/.vimrc" $USERNAME > /dev/null
 
 # Bash
-rm /home/dean/.bashrc > /dev/null
-su -c "ln -s /home/dean/setup/bashrc /home/dean/.bashrc" dean > /dev/null
+rm $HOME_USER/.bashrc > /dev/null
+su -c "ln -s $SCRIPT_DIR/bashrc $HOME_USER/.bashrc" $USERNAME > /dev/null
 
 # Git
 echo "Setting email and name for git config"
-su -c "git config --global user.email \"deanwunder@gmail.com\"" dean
-su -c "git config --global user.name \"Dean Wunder\"" dean
+su -c "git config --global user.email \"$EMAIL\"" $USERNAME
+su -c "git config --global user.name \"Dean Wunder\"" $USERNAME
 
 # Custom binaries
 echo "Setting up custom home directory binaries"
-su -c "ln -s /home/dean/setup/bin /home/dean/bin" dean
+rm -rf "$HOME_USER/bin"
+su -c "ln -s $SCRIPT_DIR/bin $HOME_USER/bin" $USERNAME
 
 
