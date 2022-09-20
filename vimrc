@@ -3,7 +3,6 @@ let g:coc_disable_startup_warning = 1
 
 call plug#begin()
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'puremourning/vimspector'
 call plug#end()
 
 " key mappings example
@@ -74,8 +73,12 @@ set formatoptions+=j
 set hidden
 " Increase undo limit.
 set history=1000
-set cursorline
 color industry
-hi CursorLine cterm=none ctermbg=16
-hi CursorLineNR cterm=none ctermbg=16
+set cursorline
+hi CursorLine cterm=none ctermbg=234
+hi CursorLineNR cterm=none ctermbg=234
+hi Normal ctermbg=232
 set signcolumn=no
+
+" Don't crowd git diffs by inserting \n at end of file.
+set nofixendofline

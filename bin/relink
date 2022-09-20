@@ -1,0 +1,14 @@
+#!/bin/bash
+# Loop through all finao packages in prime
+for file in ~/git/prime/vendor/finao/*; do
+    base=`basename $file`;
+    # Check if the repo exists in ~/git/
+    if [ -d "$HOME/git/$base" ]; then
+        date=`date +%s`;
+        backupname="${base}.${date}";
+        mv "$HOME/git/prime/vendor/finao/$base" "$HOME/git/prime/vendor/finao/$backupname"
+        # Create the required symlink
+        echo "Symlinking $base..."
+        ln -s "$HOME/git/$base" "$HOME/git/prime/vendor/finao/$base";
+    fi
+done
