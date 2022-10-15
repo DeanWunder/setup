@@ -1,7 +1,0 @@
-#!/bin/bash
-
-ssh -i ~/DeanRoot.pem -p 9113 ubuntu@54.79.118.220 << EOF
-    sudo docker stop $1
-    sudo docker build -t $1 $1
-    sudo docker run -d --name $1 $1
-EOF

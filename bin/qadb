@@ -1,0 +1,3 @@
+#!/bin/bash
+qadbhost=`config qadbhost`
+mysql -h $qadbhost -u deanw -p

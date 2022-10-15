@@ -1,6 +1,6 @@
 #!/bin/bash
 # Loop through all finao packages
-ARG1=${1:-prime}
+ARG1=`pwd | cut -d'/' -f5`
 echo "Relinking finao packages for $ARG1"
 for file in ~/git/$ARG1/vendor/finao/*; do
     base=`basename $file`;
@@ -8,7 +8,7 @@ for file in ~/git/$ARG1/vendor/finao/*; do
     if [ -d "$HOME/git/$base" ]; then
         date=`date +%s`;
         backupname="${base}.${date}";
-        mv "$HOME/git/$ARG1/vendor/finao/$base" "$HOME/git/$ARG1/vendor/finao/$backupname"
+        mv "$HOME/git/$ARG1/vendor/finao/$base" "/tmp/$ARG1.$backupname"
         # Create the required symlink
         echo "Symlinking $base..."
         ln -s "$HOME/git/$base" "$HOME/git/$ARG1/vendor/finao/$base";

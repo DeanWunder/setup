@@ -1,0 +1,12 @@
+#!/bin/bash
+rm -rf ./public/build/js/*;
+rm -rf ./public/build/css/*;
+php artisan vendor:publish --tag=public --force
+php artisan vendor:publish --tag=base --force
+
+#php artisan migrate --force
+nvm use 14.17
+npm ci;
+
+php artisan base:update;
+npm run dev
