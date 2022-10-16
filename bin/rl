@@ -1,6 +1,6 @@
 #!/bin/bash
 # Loop through all finao packages
-ARG1=`pwd | cut -d'/' -f5`
+ARG1=`get_project_from_current_directory`
 echo "Relinking finao packages for $ARG1"
 for file in ~/git/$ARG1/vendor/finao/*; do
     base=`basename $file`;

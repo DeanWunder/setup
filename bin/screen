@@ -1,0 +1,5 @@
+#!/bin/bash
+date=`date --rfc-3339=seconds | cut -d'+' -f1`
+filename="$HOME/Pictures/Screenshot from $date.png"
+gnome-screenshot -f "$filename"
+gimp "$filename"

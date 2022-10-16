@@ -1,0 +1,202 @@
+#!/usr/bin/python3
+import json
+import os
+import re
+import requests
+from requests.auth import HTTPBasicAuth
+import subprocess
+import time
+
+# Receives a string containing a HTML link
+# Returns a structured version
+def link_to_dict(link):
+    url_search = re.search(r'href="(.*?)"', link)
+    title_search = re.search(r'title="(.*?)"', link)
+    text = re.search(r'>(.*?)</a>', link).group(1)
+    result = {
+        'text': text,
+        'original': link
+    }
+    if url_search:
+        result['url'] = url_search.group(1)
+    if title_search:
+        result['title'] = title_search.group(1)
+    return result
+
+# Scrape package information from repo site
+def scrape_packages():
+    repos_url = command('config repos_url')
+    repos_user = command('config repos_user')
+    repos_pass = command('config repos_pass')
+    res = requests.get(repos_url, auth=HTTPBasicAuth(repos_user, repos_pass))
+    html = res.content.decode('utf-8')
+    links = re.findall(r'(<a.*?</a>)', html)
+    structured_links = list(map(link_to_dict, links))
+    return structured_links
+
+
+# Get a list of checked out branches of repos which exist in:
+# ~/git/ and also ~/git/<project>/vendor/finao/
+def get_repo_state():
+    user = os.getlogin()
+    project = command('get_project_from_current_directory')
+    if not project:
+        project = 'prime'
+    home = '/home/' + user
+    vendor_finao = home + '/git/' + project + '/vendor/finao'
+    pkg_repos = os.listdir(vendor_finao)
+
+    # Turn package names into full paths.
+    pkg_paths = list(map(
+        lambda p: home + '/git/' + p,
+        pkg_repos
+    ))
+
+    # Remove vendor packages that don't exists in ~/git/ as a repo.
+    pkg_repos = list(filter(os.path.exists, pkg_paths))
+    
+    # Get branch names for each package repo.
+    branches = list(map(get_branch, pkg_repos))
+    hashes = list(map(get_hash, pkg_repos))
+    infos = list(map(
+        lambda p: {'branch': p[0], 'hash': p[1]},
+        list(zip(branches, hashes))
+    ))
+    return dict(zip(pkg_repos, infos))
+
+# Get the branch for a particular repo.
+def get_branch(repo):
+    return command('git branch --show-current', dir=repo)
+
+# Get the hash of the latest commit on current branch for a particular repo.
+def get_hash(repo):
+    return command('git rev-parse HEAD', dir=repo)
+
+# Run a system command
+def command(cmd, dir='.'):
+    return subprocess.check_output(
+        cmd.split(' '),
+        cwd = dir
+    ).decode('utf-8').rstrip('\n')
+
+def version_alias(links, package):
+    package_links = list(filter(
+        lambda l: 'url' in l and package in l['url'],
+        links
+    ))
+    versions = list(map(
+        lambda l: l['text'],
+        package_links
+    ))
+    number_versions = list(filter(
+        lambda v: re.search(r'^[\d\.]+$', v),
+        versions
+    ))
+    number_versions.sort()
+    return number_versions[-1]
+    
+# Prior to running: Ensure commits are pushed in package repos.
+# Ensure any changes to project repo to be included are added to staging.
+if __name__ == '__main__':
+    # TODO: Print the packages which are going to be changed.
+    states = get_repo_state()
+    no_master_branches = dict(
+        filter(lambda b: b[1]['branch'] != 'master', states.items())
+    )
+    # TODO: Print all non-master branches.
+    print('Non-master packages in composer.json...')
+    
+    # Check if latest commit of all branches is available, block if not.
+    links = []
+    while True:
+        links = scrape_packages()
+
+        # Create a list of boolean, True if package available, False if not.
+        pkgs_available = list(map(
+            lambda x: len(list(filter(
+                lambda a: a['title'] == x['hash'] if 'title' in a else False, 
+                links
+            ))) > 0,
+            no_master_branches.values()
+        ))
+        if all(pkgs_available):
+            print('All packages are available.')
+            break
+        else:
+            # Print packages which are not yet available.
+            # Remove packages which are available.
+            unavailables = list(filter(
+                lambda a: not a[1],
+                list(zip(no_master_branches.keys(), pkgs_available))
+            ))
+            for unavailable in unavailables:
+                print('Unable to find ' + unavailable[0] + ':' + unavailable[1])
+
+            print('Trying again after 10s...')
+            sleep(10)
+    
+    # Edit composer.json to specify correct package with version alias.
+    # Also set packages back to 'dev-master' if they're on master branch locally.
+    user = os.getlogin()
+    home = '/home/' + user
+    project = command('get_project_from_current_directory')
+    if not project:
+        project = 'prime';
+    composer_json = home + '/git/' + project + '/composer.json'
+    # Read data from composer.json
+    with open(composer_json, 'r') as f:
+        data = json.load(f)
+
+    for state in states:
+        basename = state.split('/')[-1]
+        if states[state]['branch'] == 'master':
+            data['require']['finao/' + basename] = 'dev-master'
+        else:
+            data['require']['finao/' + basename] = 'dev-' \
+                + states[state]['branch'] \
+                + ' as ' \
+                + version_alias(links, basename)
+
+    print(data['require'])
+
+    # Write data to composer.json
+    os.remove(composer_json)
+    with open(composer_json, 'w') as f:
+        json.dump(data, f, indent=4)
+
+    # Run composer update and relink repos
+    print(command('cu'))
+
+    # git add composer.json composer.lock
+    command('git add composer.json composer.lock', dir=home + '/git/' + project)
+
+    # git commit -m "[project branch name] Update [comma separated list of packages]
+    project_branch = states[home + '/git/' + project]['branch']
+    message = project_branch \
+        + ' Updated '
+        + ', '.join(list(map(
+            lambda p: 'finao/' + p.split('/')[-1]
+            no_master_branches.keys()
+        )))
+    command('git commit -m "' + message + '"', dir=home + '/git/' + project)
+    
+    # git push
+    command('git push')
+
+    # Open CICD
+    cicd_url = command('config cicd_url')
+    project_name = [
+        'PRIM' => 'Prime',
+        'DLP' => 'DLP',
+        'SWCON2' => 'swcv2',
+        'TFNSW' => 'RMS',
+        'BID' => 'Bidfood',
+        'BAI' => 'bai',
+        'CTS' => 'CTS',
+        'LIN' => 'linbeck',
+        'SWDEL2' => 'swdv2',
+        'WAT' => 'Watertight'
+    ][project_branch.split('-')[0]]
+    url = cicd_url + '/job/' + project_name + '/job/' + project_branch + '/'
+    command('firefox ' + url)
+

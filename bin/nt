@@ -1,0 +1,17 @@
+#!/bin/bash
+echo "Checking out master branch in all repos..."
+for repo in $HOME/git/*; do
+    echo -n "$repo... "
+    cd $repo && git checkout master > /dev/null
+    cd $repo && git pull > /dev/null &
+done
+wait
+
+project=`get_project_from_current_directory`
+# Special case for bidfood
+if [ $project = "bidfood" ]; then
+    cd "$HOME/git/indunctiondoc" && git checkout bidfood > /dev/null
+    cd "$HOME/git/indunctiondoc" && git pull > /dev/null
+    echo "Checking out bidfood branch in inductiondoc repo..."
+fi
+echo "Done!"
