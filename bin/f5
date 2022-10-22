@@ -1,8 +1,6 @@
 #!/bin/bash
-
 if [ -z "$1" ]; then
     echo "Usage: $0 <branch>"
 fi
 
-gsw "$1"
-cb
+nt $1 && cup

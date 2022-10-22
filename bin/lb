@@ -4,6 +4,6 @@ tmp_file="/tmp/lb.$current_time"
 for repo in $HOME/git/*; do
     basename=`basename $repo`
     branch=`cd $repo && git branch --show-current`
-    echo "$basename,$branch" >> "$tmp_file"
+    echo "$basename...,$branch" >> "$tmp_file"
 done
-column -t -s',' "$tmp_file"
+column -t -s',' "$tmp_file" | sed 's/ /./g'

@@ -117,6 +117,12 @@ def update_composer_json(composer_json, states, links):
                         json_lines[i] = json_lines[i].replace(version, 'dev-master')
                 elif repo_basename == 'inductiondoc' and branch == 'bidfood':
                     json_lines[i] = json_lines[i].replace(version, 'dev-bidfood')
+                elif repo_basename == 'links' and branch == 'dlp':
+                    json_lines[i] = json_lines[i].replace(version, 'dev-dlp')
+                elif repo_basename == 'links' and branch == 'swd':
+                    json_lines[i] = json_lines[i].replace(version, 'dev-swd')
+                elif repo_basename == 'support' and branch == 'watertight':
+                    json_lines[i] = json_lines[i].replace(version, 'dev-watertight')
                 else:
                     # Custom branch (task code)
                     json_lines[i] = json_lines[i].replace(
