@@ -1,7 +1,7 @@
 #!/bin/bash
 # Loop through all finao packages
 ARG1=`get_project_from_current_directory`
-echo "Relinking finao packages for $ARG1"
+echo -n "Relinking finao packages for $ARG1... "
 for file in ~/git/$ARG1/vendor/finao/*; do
     base=`basename $file`;
     # Check if the repo exists in ~/git/
@@ -10,7 +10,7 @@ for file in ~/git/$ARG1/vendor/finao/*; do
         backupname="${base}.${date}";
         mv "$HOME/git/$ARG1/vendor/finao/$base" "/tmp/$ARG1.$backupname"
         # Create the required symlink
-        echo "Symlinking $base..."
         ln -s "$HOME/git/$base" "$HOME/git/$ARG1/vendor/finao/$base";
     fi
 done
+echo "Done!"

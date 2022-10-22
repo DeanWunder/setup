@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ -z "$1" ]; then
+    echo "Usage: $0 <database>"
+    echo "Usage: $0 <database> <table>"
+    exit 1
+fi
+
+time=`date +%s`
+mkdir -p "$HOME/Downloads/sql"
+
+if [ -z "$2" ]; then
+    sudo mysqldump -u root "$1" > "$HOME/Downloads/sql/local.$identifier.$time.sql"
+else
+    sudo mysqldump -u root "$1" "$2" > "$HOME/Downloads/sql/local.$identifier.$time.sql"
+fi

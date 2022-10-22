@@ -1,0 +1,4 @@
+#!/bin/bash
+repo=`pwd | cut -d'/' -f1-5`
+test -f "$repo/.env"
+exit $?

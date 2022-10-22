@@ -1,2 +1,13 @@
 #!/bin/bash
 git push
+
+# Open CICD
+pwd=`pwd`
+repo=`basename $pwd`
+projects=("bai", "bidfood", "cts", "dlp", "linbeck", "prime", "rms", "swconnect", "swdeliveryv2", "watertight")
+branch=`git branch --show-current 2> /dev/null`
+
+if [[ " ${projects[*]} " =~ " ${repo}" ]]; then
+    echo 'hi'
+    open_cicd $branch
+fi

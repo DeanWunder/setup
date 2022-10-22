@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ -z "$1" ]; then
+    echo "Usage: $0 <database>"
+    echo "Usage: $0 <database> <table>"
+    exit 1
+fi
+
+time=`date +%s`
+mkdir -p "$HOME/Downloads/sql"
+
+if [ -z "$2" ]; then
+    mysqldump -h `config qa_db_host` -u deanw -p "$1" > "$HOME/Downloads/sql/qa.$1.$time.sql"
+else
+    mysqldump -h `config qa_db_host` -u deanw -p "$1" "$2" > "$HOME/Downloads/sql/qa.$1.$2.$time.sql"
+fi

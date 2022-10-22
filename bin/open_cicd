@@ -1,0 +1,38 @@
+#!/bin/bash
+if [ -z "$1" ]; then
+    echo "Usage: $0 <branch>"
+    exit 1
+fi
+
+branch="$1"
+prefix=`echo $branch | cut -d'-' -f1`
+
+# Convert branch prefix to cicd name.
+if [ $prefix == "PRIM" ]; then
+    project_name="Prime"
+elif [ $prefix == "DLP" ]; then
+    project_name="DLP"
+elif [ $prefix == "SWCON2" ]; then
+    project_name="swcv2"
+elif [ $prefix == "TFNSW" ]; then
+    project_name="RMS"
+elif [ $prefix == "BID" ]; then
+    project_name="Bidfood"
+elif [ $prefix == "BAI" ]; then
+    project_name="bai"
+elif [ $prefix == "CTS" ]; then
+    project_name="CTS"
+elif [ $prefix == "LIN" ]; then
+    project_name="linbeck"
+elif [ $prefix == "SWDEL2" ]; then
+    project_name="swdv2"
+elif [ $prefix == "WAT" ]; then
+    project_name="Watertight"
+else
+    echo "Error: Branch prefix unknown."
+    exit 1
+fi
+
+cicd=`config cicd_url`
+url="$cicd/job/$project_name/job/$branch/"
+firefox "$url"
