@@ -1,3 +1,7 @@
 #!/bin/bash
 qa_db_host=`config qa_db_host`
-mysql -h $qa_db_host -u deanw -p
+if [ -z "$1" ]; then
+    mysql -h $qa_db_host -u deanw -p
+else
+    mysql -h $qa_db_host -u deanw -p --database "$1"
+fi
