@@ -8,6 +8,7 @@ projects=("bai", "bidfood", "cts", "dlp", "linbeck", "prime", "rms", "swconnect"
 branch=`git branch --show-current 2> /dev/null`
 
 if [[ " ${projects[*]} " =~ " ${repo}" ]]; then
-    echo 'hi'
     open_cicd $branch
 fi
+
+exit 0

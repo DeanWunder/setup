@@ -1,3 +1,5 @@
 #!/bin/bash
 branch=`git branch --show-current`
-git commit -am "$branch $@"
+gs
+gaa
+git commit -m "$branch $@"

@@ -1,0 +1,6 @@
+#!/bin/bash
+for repo in $HOME/git/*; do
+    echo -n `basename $repo`
+    echo ":"
+    cd $repo && git status -s
+done

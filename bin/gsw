@@ -1,3 +1,2 @@
 #!/bin/bash
-git stash >/dev/null
-git switch $1 2>/dev/null || git switch -c $1;
+git switch $1 2>/dev/null || gswc $1

@@ -109,7 +109,7 @@ def update_composer_json(composer_json, states, links):
         repo_basename = repo.split('/')[-1]
         for i in range(len(json_lines)):
             if 'finao/' + repo_basename in json_lines[i]:
-                version = re.search(r':.*"(.*)",', json_lines[i]).group(1)
+                version = re.search(r':.*"(.*)"', json_lines[i]).group(1)
                 branch = states[repo]['branch']
                 # If the repo state is master branch, versions like "^2.0" are ok.
                 if branch == 'master':
@@ -227,6 +227,3 @@ if __name__ == '__main__':
     
     # git push
     command('gp')
-
-    # Open CICD
-    command(['open_cicd', project_branch])

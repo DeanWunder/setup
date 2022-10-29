@@ -4,5 +4,11 @@ if [ -z "$1" ]; then
     echo "Usage: $0 <branch>"
 fi
 
-gsw "$1"
+dir=`pwd`
+
+for project in bai bidfood cts dlp linbeck prime rms watertight; do
+    cd $HOME/git/$project && git stash > /dev/null && gsw master > /dev/null
+done
+
+cd $dir && git stash > /dev/null && gsw "$1"
 cb

@@ -50,6 +50,12 @@ def command(cmd, dir='.', stderr=None):
 
 # Checkout a branch and pull for a particular repo.
 def checkout_branch(repo_path, branch):
+    p0 = subprocess.Popen(
+        ['git', 'stash'],
+        stdout=subprocess.DEVNULL,
+        cwd=repo_path
+    )
+    p0.wait()
     p1 = subprocess.Popen(
         ['gsw', branch],
         stdout=subprocess.DEVNULL,
@@ -68,7 +74,7 @@ def line_to_popen(line):
     home = '/home/' + user
     repo_basename = re.search(r'"finao/(.*)":', line).group(1)
     repo = home + '/git/' + repo_basename
-    version = re.search(r':.*"(.*)",', line).group(1)
+    version = re.search(r':.*"(.*)"', line).group(1)
 
     custom_branch = re.search(r'^dev-(.*-\d+) as .*$', version)
     if version == 'dev-master' or re.search(r'^[\^\d\.]*$', version):

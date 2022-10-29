@@ -5,7 +5,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-time=`date +%s`
+time=`date --rfc-3339=seconds | cut -d'+' -f1`
 mkdir -p "$HOME/Downloads/sql"
 
 if [ -z "$2" ]; then

@@ -1,9 +1,11 @@
 #!/bin/bash
-grep -rv '^[^:]*vendor/' | \
+grep -r '.*' | \
+    grep -v '^[^:]*vendor/' | \
     grep -v '^[^:]*public/' | \
     grep -v '^[^:]*node_modules/' | \
     grep -v '^[^:]*storage/' | \
     grep -v '^[^:]*libs/' | \
     grep -v '^[^:]*\.min\.js\:' | \
     grep -v '^[^:]*\.min\.css\:' | \
-    grep --color=always "$@" 
+    grep -i "^[^:]*:.*$@.*" | \
+    grep --color=always -i "$@"
