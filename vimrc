@@ -3,6 +3,7 @@ let g:coc_disable_startup_warning = 1
 
 call plug#begin()
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'jwalton512/vim-brade'
 call plug#end()
 
 " key mappings example
@@ -82,3 +83,5 @@ set signcolumn=no
 
 " Don't crowd git diffs by inserting \n at end of file.
 set nofixendofline
+
+autocmd BufNewFile,BufRead *.blade.php set ft=html " Fix blade auto-indent

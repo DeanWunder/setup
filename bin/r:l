@@ -1,2 +1,11 @@
 #!/bin/bash
-php artisan route:list | grep --colour=always $@
+php artisan route:list > /dev/null
+if [ $? -eq 0 ]; then
+    if [ -z "$@" ]; then
+        php artisan route:list
+    else
+        php artisan route:list | grep --colour=always $@
+    fi
+else
+    php artisan route:list
+fi

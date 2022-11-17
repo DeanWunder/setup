@@ -1,2 +1,11 @@
 #!/bin/bash
-git switch $1 2>/dev/null || gswc $1
+
+git switch $1 2> /dev/null
+
+# If no such branch exists
+if [ $? -eq 128 ]; then
+    gswc $1
+elif [ $? -ne 0 ]; then
+    # Other error: run echoing stderr.
+    git switch $1
+fi

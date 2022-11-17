@@ -1,3 +1,2 @@
 #!/bin/bash
-branch=`git branch --show-current`
-git commit -am "$branch $@" && gp
+gca "$@" && gp

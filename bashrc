@@ -3,8 +3,16 @@ alias awsdb='ssh -i ~/DeanRoot.pem -p 9113 ubuntu@3.104.110.233'
 alias gs='git status'
 PATH="/home/dean/bin:$PATH"
 
-vim() {
-    vim.gtk3 "$@";
+vim () {
+    if [ $# -eq 1 ] && [ -d "$1" ]; then
+        cd "$1"
+    else
+        vim.gtk3 "$@"
+    fi
+}
+
+v () {
+    vim "$@"
 }
 
 # get current branch in git repo

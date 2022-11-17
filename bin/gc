@@ -1,3 +1,28 @@
 #!/bin/bash
 branch=`git branch --show-current`
-git commit -m "$branch $@"
+
+# If currently on the master branch, swap to a branch name from
+# whichever project repo is not on master.
+if [ "$branch" = "master" ]; then
+
+    # Identify which branch is not master.
+    branch=""
+    for project in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2 watertight; do
+        project_branch=`cd $HOME/git/$project && git branch --show-current`
+        if [ "$project_branch" != "master" ]; then
+            branch="$project_branch"
+        fi
+    done
+
+    if [ -z "$branch" ]; then
+        echo "Error: cannot commit to master."
+        exit 1
+    fi
+    gsw "$branch"
+fi
+
+if [ -z "$1" ]; then
+    git commit
+else
+    git commit -m "$branch $@"
+fi

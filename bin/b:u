@@ -1,6 +1,7 @@
 #!/bin/bash
 rm -rf ./public/build/js/*;
 rm -rf ./public/build/css/*;
+rm -rf ./public/css/*
 php artisan vendor:publish --tag=public --force
 php artisan vendor:publish --tag=base --force
 

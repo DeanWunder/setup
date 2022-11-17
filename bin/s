@@ -1,11 +1,8 @@
 #!/bin/bash
-grep -r '.*' | \
-    grep -v '^[^:]*vendor/' | \
-    grep -v '^[^:]*public/' | \
-    grep -v '^[^:]*node_modules/' | \
-    grep -v '^[^:]*storage/' | \
-    grep -v '^[^:]*libs/' | \
-    grep -v '^[^:]*\.min\.js\:' | \
-    grep -v '^[^:]*\.min\.css\:' | \
-    grep -i "^[^:]*:.*$@.*" | \
-    grep --color=always -i "$@"
+grep --color=always --exclude-from=$HOME/setup/grep_exclusions \
+    --exclude-dir=vendor \
+    --exclude-dir=public \
+    --exclude-dir=node_modules \
+    --exclude-dir=libs \
+    --exclude-dir=.git -ri "$@"
+
