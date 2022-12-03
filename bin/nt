@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 # Check argument exists
 if [ -z "$1" ]; then
