@@ -8,14 +8,14 @@ repo=`get_project_from_current_directory`
 branch=`git branch --show-current 2> /dev/null`
 
 # Only open the URL if there are more changes than just composer.(json|lock)
-others=`git diff --name-only origin/$branch $branch | grep -v '^composer.json$' | grep -v '^composer.lock$'`
+others=`git diff --name-only origin/master $branch | grep -v '^composer.json$' | grep -v '^composer.lock$'`
 if [ $? -eq 0 ]; then
     # Only open the URL if it hasn't been opened before
     cat $HOME/setup/log/pull_requests | grep "$repo $branch" > /dev/null
     if [ $? -eq 1 ]; then
         # Only open URL if there is a URL found
         if [ -n "$url" ]; then
-            cat "$repo $branch $url" >> $HOME/setup/log/pull_requests
+            echo "$repo $branch $url" >> $HOME/setup/log/pull_requests
             firefox $url
         fi
     fi

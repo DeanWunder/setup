@@ -3,5 +3,6 @@ qa_db_host=`config qa_db_host`
 if [ -z "$1" ]; then
     mysql -h $qa_db_host -u deanw -p
 else
-    mysql -h $qa_db_host -u deanw -p --database "$1"
+    lower_arg=`echo "$1" | tr '[:upper:]' '[:lower:]'`
+    mysql -h $qa_db_host -u deanw -p --database "$lower_arg"
 fi

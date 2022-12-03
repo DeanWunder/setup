@@ -1,7 +1,18 @@
 #!/bin/bash
+set -x
 
+# Check argument exists
 if [ -z "$1" ]; then
     echo "Usage: $0 <branch>"
+    exit 1
+fi
+
+# Check validity of the branch name
+echo $1 | grep -e "BAI-" -e "BID-" -e "CTS-" -e "DLP-" -e "LIN-" -e "PRIM-" -e "TFNSW-" -e "SWCON2-" -e "SWDEL2-" -e "WAT-"
+valid=$?
+if [ $valid -eq 1 ]; then
+    echo "Error: invalid branch name"
+    exit 1
 fi
 
 dir=`pwd`
@@ -12,3 +23,4 @@ done
 
 cd $dir && git stash > /dev/null && gsw "$1"
 cb
+b:u

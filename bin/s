@@ -3,6 +3,7 @@ grep --color=always --exclude-from=$HOME/setup/grep_exclusions \
     --exclude-dir=vendor \
     --exclude-dir=public \
     --exclude-dir=node_modules \
-    --exclude-dir=libs \
+    --exclude-dir=storage \
+    --exclude-dir=build \
     --exclude-dir=.git -ri "$@"
 
