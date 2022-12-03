@@ -84,7 +84,7 @@ def line_to_popen(line):
     elif version == 'dev-dlp' and repo_basename == 'links':
         return checkout_branch(repo, 'dlp')
     elif version == 'dev-swd' and repo_basename == 'links':
-        return checkout_branch(repo, 'dlp')
+        return checkout_branch(repo, 'swd')
     elif version == 'dev-watertight' and repo_basename == 'support':
         return checkout_branch(repo, 'watertight')
     elif custom_branch:

@@ -1,0 +1,4 @@
+i3-resurrect restore -w 1
+i3-resurrect restore -w 2
+i3-resurrect restore -w 3
+firefox https://finao-aus.atlassian.net/jira/your-work

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 if [ -z "$1" ]; then
     echo "Usage: $0 <branch>"
     exit 1
@@ -11,7 +12,7 @@ if [ -z "$AWS_ACCESS_KEY_ID" ]; then
     exit 1;
 fi
 
-pod=`kubectl get pods -A | grep "Running" | grep "$lower_branch" | tr -s ' '`
+pod=`kubectl get pods -A | grep "Running" | grep "$lower_branch-deploy" | tr -s ' '`
 echo $pod
 namespace=$(echo "$pod" | cut -d' ' -f1)
 name=$(echo "$pod" | cut -d' ' -f2)
