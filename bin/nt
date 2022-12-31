@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 # Check validity of the branch name
-echo $1 | grep -e "BAI-" -e "BID-" -e "CTS-" -e "DLP-" -e "LIN-" -e "PRIM-" -e "TFNSW-" -e "SWCON2-" -e "SWDEL2-" -e "WAT-"
+echo $1 | grep -e "BAI-" -e "BID-" -e "CTS-" -e "DLP-" -e "LIN-" -e "PRIM-" -e "TFNSW-" -e "SWCON2-" -e "SWDEL2-" -e "WAT-" > /dev/null
 valid=$?
 if [ $valid -eq 1 ]; then
     echo "Error: invalid branch name"
@@ -22,4 +22,4 @@ done
 
 cd $dir && git stash > /dev/null && gsw "$1"
 cb
-b:u
+b:u &> /dev/null &

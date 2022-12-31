@@ -11,7 +11,15 @@ if [ -z "$AWS_ACCESS_KEY_ID" ]; then
     exit 1;
 fi
 
-pod=`kubectl get pods -A | grep "Running" | grep "$lower_branch-deploy" | tr -s ' '`
+pods=`kubectl get pods -A`
+ret=$?
+if [ $ret -eq 1 ]; then
+    echo "Set AWS environment variables first."
+    firefox https://finao-aus.awsapps.com/start#/
+    exit 1;
+fi
+
+pod=`echo "$pods" | grep "Running" | grep "$lower_branch-deploy" | tr -s ' '`
 echo $pod
 namespace=$(echo "$pod" | cut -d' ' -f1)
 name=$(echo "$pod" | cut -d' ' -f2)
