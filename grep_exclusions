@@ -1,3 +1,4 @@
 *.min.js
 *.min.css
 bootstrap.css
+default-theme.css

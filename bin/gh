@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -z "$@" ]; then
+    echo "Usage: $0 <file>"
+    exit 1
+fi
+
+git log --follow -p -- "$@"

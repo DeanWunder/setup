@@ -226,4 +226,4 @@ if __name__ == '__main__':
     command(cmd, dir=home + '/git/' + project)
     
     # git push
-    command('gp')
+    #command('gp')

@@ -1,4 +1,13 @@
-i3-resurrect restore -w 1
-i3-resurrect restore -w 2
-i3-resurrect restore -w 3
-firefox https://finao-aus.atlassian.net/jira/your-work
+#!/bin/bash
+
+if xrandr | grep 'eDP-1 connected primary' | grep '+0+0'; then
+    # Resurrect i3 for home setup
+    i3-resurrect restore --workspace 1
+    i3-resurrect restore --workspace 2
+    i3-resurrect restore --workspace 3
+else
+    # Resurrect i3 for office
+    i3-resurrect restore --directory ~/.i3/i3-resurrect/office --workspace 1
+    i3-resurrect restore --directory ~/.i3/i3-resurrect/office --workspace 2
+    i3-resurrect restore --directory ~/.i3/i3-resurrect/office --workspace 3
+fi
