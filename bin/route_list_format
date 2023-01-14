@@ -1,0 +1,16 @@
+#!/usr/bin/python3
+
+import json
+import subprocess
+import sys
+
+# Use a tmp file to save route data for column command
+tmpfilename = '/tmp/route_list_format'
+routes = json.load(sys.stdin)
+with open(tmpfilename, 'w') as tmpfile:
+    for route in routes:
+        print(route['method'], route['uri'], route['name'], route['action'], file=tmpfile)
+
+# Column command to nicely format output into columns
+result = subprocess.run(['column', '-t', '-s" "', tmpfilename], stdout=subprocess.PIPE)
+print(result.stdout.decode('utf-8'))

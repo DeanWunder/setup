@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat "$HOME/setup/tinker/init_database" | php artisan tinker

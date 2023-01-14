@@ -10,6 +10,6 @@ done
 column -t -s',' "$tmp_file" | sed 's/ /./g' | while read line ; do
     echo $line
     repo=`echo $line | grep -o '^[^\.]*'`
-    cd $HOME/git/$repo && git status -s
+    cd $HOME/git/$repo && git -c color.status=always status -s
 done
 

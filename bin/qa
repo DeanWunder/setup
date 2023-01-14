@@ -20,7 +20,10 @@ if [ $ret -eq 1 ]; then
 fi
 
 pod=`echo "$pods" | grep "Running" | grep "$lower_branch-deploy" | tr -s ' '`
-echo $pod
+if [ -z "$pod" ]; then
+    echo "Error: no such running pod $lower_branch"
+    exit 1
+fi
 namespace=$(echo "$pod" | cut -d' ' -f1)
 name=$(echo "$pod" | cut -d' ' -f2)
 

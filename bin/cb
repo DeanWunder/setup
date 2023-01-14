@@ -115,4 +115,4 @@ if __name__ == '__main__':
             popen.wait()
     
     # Print out the current branch for all repos.
-    print(command('lb'))
+    print(command('gsa'))

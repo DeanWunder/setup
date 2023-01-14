@@ -85,20 +85,11 @@ def command(cmd, dir='.', stderr=None):
     ).decode('utf-8').rstrip('\n')
 
 def version_alias(links, package):
-    package_links = list(filter(
-        lambda l: 'url' in l and package in l['url'],
-        links
-    ))
-    versions = list(map(
-        lambda l: l['text'],
-        package_links
-    ))
-    number_versions = list(filter(
-        lambda v: re.search(r'^[\d\.]+$', v),
-        versions
-    ))
-    number_versions.sort()
-    return number_versions[-1]
+    composer_json = '/home/deanw/git/' + package + '/composer.json'
+    with open(composer_json) as cjfile:
+        full_json = json.load(cjfile)
+        alias = full_json['extra']['branch-alias']['dev-master']
+        return alias
 
 def update_composer_json(composer_json, states, links):
     # Read data from composer.json
@@ -125,9 +116,13 @@ def update_composer_json(composer_json, states, links):
                     json_lines[i] = json_lines[i].replace(version, 'dev-watertight')
                 else:
                     # Custom branch (task code)
+                    version_string = 'dev-' + branch
+                    alias = version_alias(links, repo_basename)
+                    if alias:
+                        version_string += ' as ' + alias
                     json_lines[i] = json_lines[i].replace(
                         version,
-                        'dev-' + branch + ' as ' + version_alias(links, repo_basename)
+                        version_string
                     )
 
     # Write data to composer.json
@@ -183,7 +178,7 @@ if __name__ == '__main__':
     project_branch = get_branch(project_path)
 
     # Print all current branches of repos.
-    print(command(['lb']))
+    print(command(['gsa']))
 
     # Print the status of current project repo.
     print('')

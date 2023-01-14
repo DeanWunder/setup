@@ -1,11 +1,11 @@
 #!/bin/bash
+
+# Check if command executes successfully first
 php artisan route:list > /dev/null
-if [ $? -eq 0 ]; then
-    if [ -z "$@" ]; then
-        php artisan route:list
-    else
-        php artisan route:list | grep --colour=always $@
-    fi
+
+# If success, output filtered or full results.
+if [ $? -eq 0 ] && [ ! -z "$@" ]; then
+    php artisan route:list --json | route_list_format | grep --color=always "$@"
 else
-    php artisan route:list
+    php artisan route:list --json | route_list_format
 fi
