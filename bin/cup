@@ -1,216 +1,41 @@
 #!/usr/bin/python3
-import json
-import os
-import re
-import requests
-#from requests.auth import HTTPBasicAuth
-import subprocess
-import time
 
-# Receives a string containing a HTML link
-# Returns a structured version
-def link_to_dict(link):
-    url_search = re.search(r'href="(.*?)"', link)
-    title_search = re.search(r'title="(.*?)"', link)
-    text = re.search(r'>(.*?)</a>', link).group(1)
-    result = {
-        'text': text,
-        'original': link
-    }
-    if url_search:
-        result['url'] = url_search.group(1)
-    if title_search:
-        result['title'] = title_search.group(1)
-    return result
-
-# Scrape package information from repo site
-def scrape_packages():
-    repos_url = command('config repos_url'.split(' '))
-    repos_user = command('config repos_user'.split(' '))
-    repos_pass = command('config repos_pass'.split(' '))
-    #res = requests.get(repos_url, auth=HTTPBasicAuth(repos_user, repos_pass))
-    #html = res.content.decode('utf-8')
-    html = command(
-        ['curl', '-u', repos_user + ':' + repos_pass, repos_url],
-        stderr=subprocess.DEVNULL
-    )
-    links = re.findall(r'(<a.*?</a>)', html)
-    structured_links = list(map(link_to_dict, links))
-    return structured_links
-
-
-# Get a list of checked out branches of repos which exist in:
-# ~/git/ and also ~/git/<project>/vendor/finao/
-def get_repo_state():
-    user = os.getlogin()
-    project = command('get_project_from_current_directory')
-    if not project:
-        project = 'prime'
-    home = '/home/' + user
-    vendor_finao = home + '/git/' + project + '/vendor/finao'
-    pkg_repos = os.listdir(vendor_finao)
-
-    # Turn package names into full paths.
-    pkg_paths = list(map(
-        lambda p: home + '/git/' + p,
-        pkg_repos
-    ))
-
-    # Remove vendor packages that don't exists in ~/git/ as a repo.
-    pkg_repos = list(filter(os.path.exists, pkg_paths))
-    
-    # Get branch names for each package repo.
-    branches = list(map(get_branch, pkg_repos))
-    hashes = list(map(get_hash, pkg_repos))
-    infos = list(map(
-        lambda p: {'branch': p[0], 'hash': p[1]},
-        list(zip(branches, hashes))
-    ))
-    return dict(zip(pkg_repos, infos))
-
-# Get the branch for a particular repo.
-def get_branch(repo):
-    return command('git branch --show-current'.split(' '), dir=repo)
-
-# Get the hash of the latest commit on current branch for a particular repo.
-def get_hash(repo):
-    return command('git rev-parse HEAD'.split(' '), dir=repo)
-
-# Run a system command
-def command(cmd, dir='.', stderr=None):
-    return subprocess.check_output(
-        cmd,
-        cwd=dir,
-        stderr=stderr
-    ).decode('utf-8').rstrip('\n')
-
-def version_alias(links, package):
-    composer_json = '/home/deanw/git/' + package + '/composer.json'
-    with open(composer_json) as cjfile:
-        full_json = json.load(cjfile)
-        alias = full_json['extra']['branch-alias']['dev-master']
-        return alias
-
-def update_composer_json(composer_json, states, links):
-    # Read data from composer.json
-    with open(composer_json, 'r') as f:
-        json_lines = f.readlines()
-
-    for repo in states:
-        repo_basename = repo.split('/')[-1]
-        for i in range(len(json_lines)):
-            if 'finao/' + repo_basename in json_lines[i]:
-                version = re.search(r':.*"(.*)"', json_lines[i]).group(1)
-                branch = states[repo]['branch']
-                # If the repo state is master branch, versions like "^2.0" are ok.
-                if branch == 'master':
-                    if version != 'dev-master' and not re.search(r'^[\^\d\.]*$', version):
-                        json_lines[i] = json_lines[i].replace(version, 'dev-master')
-                elif repo_basename == 'inductiondoc' and branch == 'bidfood':
-                    json_lines[i] = json_lines[i].replace(version, 'dev-bidfood')
-                elif repo_basename == 'links' and branch == 'dlp':
-                    json_lines[i] = json_lines[i].replace(version, 'dev-dlp')
-                elif repo_basename == 'links' and branch == 'swd':
-                    json_lines[i] = json_lines[i].replace(version, 'dev-swd')
-                elif repo_basename == 'support' and branch == 'watertight':
-                    json_lines[i] = json_lines[i].replace(version, 'dev-watertight')
-                else:
-                    # Custom branch (task code)
-                    version_string = 'dev-' + branch
-                    alias = version_alias(links, repo_basename)
-                    if alias:
-                        version_string += ' as ' + alias
-                    json_lines[i] = json_lines[i].replace(
-                        version,
-                        version_string
-                    )
-
-    # Write data to composer.json
-    with open(composer_json, 'w') as f:
-        for line in json_lines:
-            print(line, file=f, end='')
-
-# Check if latest commit of all branches is available, block if not.
-# Returns a list of dicts containing metadata of all links on packages site.
-def get_links(no_master_branches):
-    links = []
-    while True:
-        links = scrape_packages()
-
-        # Create a list of boolean, True if package available, False if not.
-        pkgs_available = list(map(
-            lambda x: len(list(filter(
-                lambda a: a['title'] == x['hash'] if 'title' in a else False, 
-                links
-            ))) > 0,
-            no_master_branches.values()
-        ))
-        if all(pkgs_available):
-            print('All packages are available!')
-            break
-        else:
-
-            # Print packages which are not yet available.
-            unavailables = list(filter(
-                lambda a: not a[1],
-                list(zip(no_master_branches.keys(), pkgs_available))
-            ))
-            for unavailable in unavailables:
-                print(unavailable[0] + ' not yet available.')
-
-            print('Trying again after 10s...')
-            time.sleep(10)
-
-    return links
-
+from pylibs.helpers import command, get_project_name, get_project_path
+from pylibs.repo_state import get_branch, get_repo_state_except_masters
     
 # Prior to running: Ensure commits are pushed in package repos.
 # Ensure any changes to project repo to be included are added to staging.
 if __name__ == '__main__':
-    user = os.getlogin()
-    home = '/home/' + user
-
-    # Get the project, or assume prime if script is running in a non-project directory.
-    project = command('get_project_from_current_directory')
-    if not project:
-        project = 'prime';
-    project_path = home + '/git/' + project
-    project_branch = get_branch(project_path)
 
     # Print all current branches of repos.
-    print(command(['gsa']))
-
-    # Print the status of current project repo.
+    print(command('gsa'))
     print('')
+
+    # Print the name and status of the current repo.
+    project = get_project_name()
     print(project + ' status:')
+    project_path = get_project_path()
     print(command(
         ['git', '-c', 'color.status=always', 'status'],
         dir=project_path
     ))
     print('')
-
-    # Get branch/hash of all repos under ~/git/
-    states = get_repo_state()
-    no_master_branches = dict(
-        filter(lambda b: b[1]['branch'] != 'master', states.items())
-    )
     
-    links = get_links(no_master_branches)
-
-    # Read data from composer.json
-    composer_json = home + '/git/' + project + '/composer.json'
-    update_composer_json(composer_json, states, links)
+    # Await packages building process
+    print(command('ap'))
 
     # Run composer update and relink repos
-    command('cu')
+    command('cu', dir=project_path)
 
     # git add composer.json composer.lock
     command(
         'git add composer.json composer.lock'.split(' '), 
-        dir=home + '/git/' + project
+        dir=project_path
     )
 
-    # git commit -m "[project branch name] Update [comma separated list of packages]
+    # git commit -m "[project branch name] Update [comma separated list of packages]"
+    no_master_branches = get_repo_state_except_masters()
+    project_branch = get_branch(project_path)
     packages = list(map(
         lambda p: 'finao/' + p.split('/')[-1],
         list(no_master_branches.keys())
@@ -218,7 +43,7 @@ if __name__ == '__main__':
     packages.sort()
     message = project_branch + ' Updated ' + ', '.join(packages)
     cmd = ['git', 'commit', '-m', message]
-    command(cmd, dir=home + '/git/' + project)
+    command(cmd, dir=project_path)
     
     # git push
-    #command('gp')
+    command('gp')

@@ -1,0 +1,74 @@
+#!/usr/bin/python3
+
+# Update composer.json: modify the composer.json contents to reflect the currently
+# checked out branches of packages under ~/git/.
+
+import re
+import os
+import json
+from pylibs.helpers import command
+from pylibs.repo_state import get_repo_state
+
+# Determine the alias string to use for a particular package
+def version_alias(package):
+    composer_json = '/home/deanw/git/' + package + '/composer.json'
+    with open(composer_json) as cjfile:
+        full_json = json.load(cjfile)
+        alias = full_json['extra']['branch-alias']['dev-master']
+        return alias
+
+def update_composer_json(composer_json, states):
+    # Read data from composer.json
+    with open(composer_json, 'r') as f:
+        json_lines = f.readlines()
+
+    for repo in states:
+        repo_basename = repo.split('/')[-1]
+        for i in range(len(json_lines)):
+            if 'finao/' + repo_basename in json_lines[i]:
+                version = re.search(r':.*"(.*)"', json_lines[i]).group(1)
+                branch = states[repo]['branch']
+                # If the repo state is master branch, versions like "^2.0" are ok.
+                if branch == 'master':
+                    if version != 'dev-master' and not re.search(r'^[\^\d\.]*$', version):
+                        json_lines[i] = json_lines[i].replace(version, 'dev-master')
+                elif repo_basename == 'inductiondoc' and branch == 'bidfood':
+                    json_lines[i] = json_lines[i].replace(version, 'dev-bidfood')
+                elif repo_basename == 'links' and branch == 'dlp':
+                    json_lines[i] = json_lines[i].replace(version, 'dev-dlp')
+                elif repo_basename == 'links' and branch == 'swd':
+                    json_lines[i] = json_lines[i].replace(version, 'dev-swd')
+                elif repo_basename == 'support' and branch == 'watertight':
+                    json_lines[i] = json_lines[i].replace(version, 'dev-watertight')
+                else:
+                    # Custom branch (task code)
+                    version_string = 'dev-' + branch
+                    alias = version_alias(repo_basename)
+                    if alias:
+                        version_string += ' as ' + alias
+                    json_lines[i] = json_lines[i].replace(
+                        version,
+                        version_string
+                    )
+
+    # Write data to composer.json
+    with open(composer_json, 'w') as f:
+        for line in json_lines:
+            print(line, file=f, end='')
+
+if __name__ == '__main__':
+    user = os.getlogin()
+    home = '/home/' + user
+
+    # Get the project, or assume prime if script is running in a non-project directory.
+    project = command('get_project_from_current_directory')
+    if not project:
+        project = 'prime';
+    project_path = home + '/git/' + project
+
+    # Composer.json file path
+    composer_json = project_path + '/composer.json'
+
+    # Update composer.json contents
+    states = get_repo_state()
+    update_composer_json(composer_json, states)
