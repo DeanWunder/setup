@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 branch=`git branch --show-current`
 
 # If currently on the master branch, swap to a branch name from
