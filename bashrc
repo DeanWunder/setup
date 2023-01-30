@@ -4,11 +4,7 @@ alias gs='git status'
 PATH="/home/dean/bin:$PATH"
 
 vim () {
-    if [ $# -eq 1 ] && [ -d "$1" ]; then
-        cd "$1"
-    else
-        vim.gtk3 "$@"
-    fi
+    cd "$1" 2> /dev/null || vim.gtk3 "$@"
 }
 
 v () {

@@ -1,3 +1,4 @@
+import json
 import os
 from pylibs.helpers import command
 
@@ -17,14 +18,13 @@ def get_repo_state():
     if not project:
         project = 'prime'
     home = '/home/' + user
-    vendor_finao = home + '/git/' + project + '/vendor/finao'
-    pkg_repos = os.listdir(vendor_finao)
 
-    # Turn package names into full paths.
-    pkg_paths = list(map(
-        lambda p: home + '/git/' + p,
-        pkg_repos
-    ))
+    # List only those packages required in composer.json
+    with open(home + '/git/' + project + '/composer.json', 'r') as cj:
+        cj_contents = json.loads(cj.read())
+    reqs = cj_contents['require']
+    pkg_reqs = {k: v for k, v in reqs.items() if k.startswith('finao')}
+    pkg_paths = [home + '/git/' + p.split('/')[1] for p in pkg_reqs.keys()]
 
     # Remove vendor packages that don't exists in ~/git/ as a repo.
     pkg_repos = list(filter(os.path.exists, pkg_paths))

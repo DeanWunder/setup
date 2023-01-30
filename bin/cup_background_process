@@ -1,0 +1,53 @@
+#!/usr/bin/python3
+
+import json
+import subprocess
+import sys
+from pylibs.await_packages import await_packages
+from pylibs.helpers import command, get_project_name, get_project_path
+
+logpath = sys.argv[1] + '.log'
+
+def print_log(string):
+    with open(logpath, 'a') as lf:
+        print(string, file=lf)
+
+if __name__ == '__main__':
+
+    if len(sys.argv) != 2:
+        print('Usage: ' + sys.argv[0] + ' <tmpfile_prefix>')
+        exit()
+
+    print_log('Start of cup_background_process')
+    print_log('/tmp file prefix: ' + sys.argv[1])
+
+    branches_filepath = sys.argv[1] + '.branches'
+    project_path = sys.argv[1] + '.repo'
+    print_log(command(['ap', branches_filepath], dir=project_path))
+
+    print_log(command('uc', dir=project_path))
+
+    # Run composer update and relink repos
+    print_log(command('cu', dir=project_path, stderr=subprocess.STDOUT))
+
+    # git add composer.json composer.lock
+    print_log(command(
+        'git add composer.json composer.lock'.split(' '), 
+        dir=project_path
+    ))
+
+    # gcap "Update [comma separated list of packages]"
+    with open(branches_filepath, 'r') as bf:
+        no_masters = json.loads(bf.read())
+    packages = list(map(
+        lambda p: 'finao/' + p.split('/')[-1],
+        list(no_masters.keys())
+    ))
+    packages.sort()
+    print_log(command('ga composer.json composer.lock'.split(' '), dir=project_path))
+    message = 'Updated ' + ', '.join(packages)
+    try:
+        print_log(command(['gc', message], dir=project_path))
+    except Exception:
+        pass
+    print_log(command('gp', dir=project_path))

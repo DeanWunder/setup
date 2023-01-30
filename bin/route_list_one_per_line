@@ -1,0 +1,8 @@
+#!/usr/bin/python3
+
+import json
+import sys
+
+routes = json.load(sys.stdin)
+for route in routes:
+    print(route['method'], route['uri'], route['name'], route['action'])

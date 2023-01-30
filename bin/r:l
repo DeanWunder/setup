@@ -5,7 +5,9 @@ php artisan route:list > /dev/null
 
 # If success, output filtered or full results.
 if [ $? -eq 0 ] && [ ! -z "$@" ]; then
-    php artisan route:list --json | route_list_format | grep --color=always "$@"
+    php artisan route:list --json | route_list_one_per_line | grep --color=always "$@" > /tmp/r:l
 else
-    php artisan route:list --json | route_list_format
+    php artisan route:list --json | route_list_one_per_line > /tmp/r:l
 fi
+
+column -t -s" " /tmp/r:l

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <branch>"
+    exit 1
+fi
+
+if [[ "$1" == "BAI-"* ]]; then
+    echo "bai"
+elif [[ "$1" == "BID-"* ]]; then
+    echo "bidfood"
+elif [[ "$1" == "CTS-"* ]]; then
+    echo "cts"
+elif [[ "$1" == "DLP-"* ]]; then
+    echo "dlp"
+elif [[ "$1" == "LIN-"* ]]; then
+    echo "linbeck"
+elif [[ "$1" == "PRIM-"* ]]; then
+    echo "prime"
+elif [[ "$1" == "TFNSW-"* ]]; then
+    echo "rms"
+elif [[ "$1" == "SWCON2-"* ]]; then
+    echo "swconnect"
+elif [[ "$1" == "SWDEL2-"* ]]; then
+    echo "swdeliveryv2"
+elif [[ "$1" == "WAT-"* ]]; then
+    echo "watertight"
+else
+    echo "Error: invalid task code" >&2
+    exit 1
+fi

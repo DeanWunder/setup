@@ -1,7 +1,11 @@
 #!/usr/bin/python3
 
+import json
+import os
+import subprocess
+import time
 from pylibs.helpers import command, get_project_name, get_project_path
-from pylibs.repo_state import get_branch, get_repo_state_except_masters
+from pylibs.repo_state import get_repo_state_except_masters
     
 # Prior to running: Ensure commits are pushed in package repos.
 # Ensure any changes to project repo to be included are added to staging.
@@ -11,39 +15,30 @@ if __name__ == '__main__':
     print(command('gsa'))
     print('')
 
-    # Print the name and status of the current repo.
-    project = get_project_name()
-    print(project + ' status:')
+    # Save repo state to tmp file as it will be required for ap
+    time = str(round(time.time()))
+    no_masters = get_repo_state_except_masters()
+    project_name = get_project_name()
+    with open('/tmp/cup.' + project_name + '.' + time + '.branches', 'w') as f:
+        json.dump(no_masters, f)
+
+    # Copy all repo contents into temporary directory
     project_path = get_project_path()
-    print(command(
-        ['git', '-c', 'color.status=always', 'status'],
-        dir=project_path
-    ))
-    print('')
-    
-    # Await packages building process
-    print(command('ap'))
+    tmpfile_prefix = '/tmp/cup.' + project_name + '.' + time
+    tmpfile = tmpfile_prefix + '.repo'
+    command([
+        'rsync', 
+        '-r', 
+        '--exclude=/vendor/',
+        '--exclude=node_modules/',
+        '--exclude=public/css/',
+        '--exclude=public/fonts/',
+        '--exclude=public/js/',
+        '--exclude=public/vendor/',
+        '--exclude=public/resources/',
+        '--exclude=public/mix-manifest.json',
+        project_path + '/', 
+        tmpfile
+    ]);
 
-    # Run composer update and relink repos
-    command('cu', dir=project_path)
-
-    # git add composer.json composer.lock
-    command(
-        'git add composer.json composer.lock'.split(' '), 
-        dir=project_path
-    )
-
-    # git commit -m "[project branch name] Update [comma separated list of packages]"
-    no_master_branches = get_repo_state_except_masters()
-    project_branch = get_branch(project_path)
-    packages = list(map(
-        lambda p: 'finao/' + p.split('/')[-1],
-        list(no_master_branches.keys())
-    ))
-    packages.sort()
-    message = project_branch + ' Updated ' + ', '.join(packages)
-    cmd = ['git', 'commit', '-m', message]
-    command(cmd, dir=project_path)
-    
-    # git push
-    command('gp')
+    subprocess.Popen(['cup_background_process', tmpfile_prefix])
