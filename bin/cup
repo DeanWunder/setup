@@ -22,8 +22,11 @@ if __name__ == '__main__':
     with open('/tmp/cup.' + project_name + '.' + time + '.branches', 'w') as f:
         json.dump(no_masters, f)
 
-    # Copy all repo contents into temporary directory
+    # Update composer.json prior to work in temporary directory
     project_path = get_project_path()
+    print(command('uc', dir=project_path))
+
+    # Copy all repo contents into temporary directory
     tmpfile_prefix = '/tmp/cup.' + project_name + '.' + time
     tmpfile = tmpfile_prefix + '.repo'
     command([

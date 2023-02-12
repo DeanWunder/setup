@@ -1,11 +1,14 @@
 #!/bin/bash
-git push 2> >(tee /tmp/gp_stderr)
+git push "$@" 2> >(tee /tmp/gp_stderr)
 
 # Extract the pull request URL from git push output.
 url=`cat /tmp/gp_stderr | grep -o 'https://[^ ]*'`
 
-repo=`get_project_from_current_directory`
 branch=`git branch --show-current 2> /dev/null`
+repo=`get_project_from_current_directory`
+if [ -z "$repo" ]; then
+    repo=`task_code_to_project_name $branch`
+fi
 
 # Only open the URL if there are more changes than just composer.(json|lock)
 others=`git diff --name-only origin/master $branch | grep -v '^composer.json$' | grep -v '^composer.lock$'`

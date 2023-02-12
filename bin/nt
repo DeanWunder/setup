@@ -11,11 +11,11 @@ project_name=`task_code_to_project_name $1` || { echo "Error: invalid branch nam
 project_repo="$HOME/git/$project_name"
 
 for project in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2 watertight; do
-    cd $HOME/git/$project && git stash > /dev/null && gsw master > /dev/null && git pull origin master & > /dev/null
+    cd $HOME/git/$project && git stash > /dev/null && gsw master > /dev/null
 done
 
 wait
 
-cd $project_repo && git stash > /dev/null && gsw "$1" && git pull origin "$1" 2> /dev/null
+cd $project_repo && git pull origin master 2> /dev/null && git stash > /dev/null && gsw "$1" && git pull origin "$1" 2> /dev/null
 cb
 b:u &> /dev/null &

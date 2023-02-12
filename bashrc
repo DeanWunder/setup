@@ -4,6 +4,9 @@ alias gs='git status'
 PATH="/home/dean/bin:$PATH"
 
 vim () {
+    if [ -z "$@" ]; then
+        vim.gtk3
+    fi
     cd "$1" 2> /dev/null || vim.gtk3 "$@"
 }
 
@@ -28,3 +31,5 @@ export XCURSOR_PATH=$RUNTIME/usr/share/icons
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+cd /home/deanw/git

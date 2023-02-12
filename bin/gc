@@ -3,7 +3,7 @@ branch=`git branch --show-current`
 
 # If currently on the master branch, swap to a branch name from
 # whichever project repo is not on master.
-if [ "$branch" = "master" ]; then
+if [ "$branch" = "master"  ]; then
 
     # Identify which branch is not master.
     branch=""

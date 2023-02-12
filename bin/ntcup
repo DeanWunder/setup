@@ -7,6 +7,6 @@ fi
 
 for var in "$@"
 do
-    $project_repo=`task_code_to_project_repo $1`
+    project_repo=`task_code_to_project_repo $1`
     nt "$var" && cd $project_repo && cup
 done
