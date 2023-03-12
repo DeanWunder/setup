@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Search for all instances of a string, open all resultant files in vim for editing.
+files=`s --color=none "$@" | cut -d':' -f1 | sort | uniq`
+if [ -n "$files" ]; then
+    vim.gtk3 $files
+fi

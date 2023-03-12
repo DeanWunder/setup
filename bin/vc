@@ -1,0 +1,4 @@
+#!/bin/bash
+
+files=("${@/#/app\/Http\/Controllers\/}")
+vim.gtk3 ${files[*]}

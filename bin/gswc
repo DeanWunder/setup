@@ -1,2 +1,2 @@
 #!/bin/bash
-git switch master && git pull && git switch -c "$1" && git branch --set-upstream-to="origin/$1" "$1"
+git switch master && git pull && git switch -c "$1"

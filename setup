@@ -45,6 +45,8 @@ su -c "ln -s $SCRIPT_DIR/bashrc $HOME_USER/.bashrc" $USERNAME > /dev/null
 echo "Setting email and name for git config"
 su -c "git config --global user.email \"$EMAIL\"" $USERNAME
 su -c "git config --global user.name \"Dean Wunder\"" $USERNAME
+# Assume tracking information for git pull.
+su -c "git config --global branch.autoSetupMerge always" $USERNAME
 
 # Custom binaries
 echo "Setting up custom home directory binaries"

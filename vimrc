@@ -30,6 +30,7 @@ set ignorecase
 set incsearch
 " Automatically switch search to case-sensitive when search query contains an uppercase letter.
 set smartcase
+
 " show line numbers
 set number
 " prevent line numbers from being selected
@@ -85,3 +86,44 @@ set signcolumn=no
 set nofixendofline
 
 autocmd BufNewFile,BufRead *.blade.php set ft=html " Fix blade auto-indent
+
+" Move entire line up or down by pressing <c-s-up> or <c-s-down>
+function! s:swap_lines(n1, n2)
+    let line1 = getline(a:n1)
+    let line2 = getline(a:n2)
+    call setline(a:n1, line2)
+    call setline(a:n2, line1)
+endfunction
+
+function! s:swap_up()
+    let n = line('.')
+    if n == 1
+        return
+    endif
+
+    call s:swap_lines(n, n - 1)
+    exec n - 1
+endfunction
+
+function! s:swap_down()
+    let n = line('.')
+    if n == line('$')
+        return
+    endif
+
+    call s:swap_lines(n, n + 1)
+    exec n + 1
+endfunction
+
+noremap <silent> <c-s-up> :call <SID>swap_up()<CR>
+noremap <silent> <c-s-down> :call <SID>swap_down()<CR>
+
+cabb W w
+cabb N n
+cabb Q q
+cabb Wq wq
+cabb WQ wq
+cabb wQ wq
+cabb Wn wn
+cabb WN wn
+cabb wN wn

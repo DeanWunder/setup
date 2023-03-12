@@ -30,7 +30,7 @@ def update_composer_json(composer_json, states):
                 branch = states[repo]['branch']
                 # If the repo state is master branch, versions like "^2.0" are ok.
                 if branch == 'master':
-                    if version != 'dev-master' and not re.search(r'^[\^\d\.]*$', version):
+                    if version != 'dev-master' and not re.search(r'^[\^\d\.*]*$', version):
                         json_lines[i] = json_lines[i].replace(version, 'dev-master')
                 elif repo_basename == 'inductiondoc' and branch == 'bidfood':
                     json_lines[i] = json_lines[i].replace(version, 'dev-bidfood')

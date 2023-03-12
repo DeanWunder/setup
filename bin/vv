@@ -1,0 +1,4 @@
+#!/bin/bash
+
+files=("${@/#/resources\/views\/}")
+vim.gtk3 ${files[*]}

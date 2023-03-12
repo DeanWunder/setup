@@ -1,4 +1,4 @@
 #!/bin/bash
-find | grep --color=always "$@" | \
+find | grep -i --color=always "$@" | \
     grep -v '^[^:]*vendor/' | \
     grep -v '^[^:]*node_modules/'

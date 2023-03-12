@@ -9,4 +9,6 @@ else
     cd /home/$USER/git/`get_project_from_current_directory`
 fi
 
-php artisan db:seed --class=PermissionsSeeder
+while true; do
+    php artisan tinker;
+done
