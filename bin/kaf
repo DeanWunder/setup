@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$#" -ne "1" ]; then
+    echo "Usage: $0 <bai|bidfood|cts|dlp|linbeck|prime|rms|swconnect|swdelivery>"
+    exit 1
+fi
+
+kubectl apply -f "$HOME/Downloads/configmap/$1.yaml"

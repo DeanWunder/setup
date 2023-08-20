@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Done: 
+# - Make a commit with the same message to all repos.
+# - Push commit immediately on package repos.
+# - Run the cup command on the project repo.
+
+for repo in /home/$USER/git/*; do
+    basename=`basename $repo`
+    committed=0
+    for project in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2 watertight; do
+        if [ "$basename" == "$project" ] ; then
+            if [ -n "`cd $repo && git status --porcelain`" ]; then
+                #echo "cd $repo && gca $@"
+                committed=1
+                cd $repo && gca "$@"
+            fi
+        fi
+    done
+
+    # If the $repo is not a project.
+    if [ "$committed" -eq "0" ] ; then
+        if [ -n "`cd $repo && git status --porcelain`" ]; then
+            #echo "cd $repo && gcap $@"
+            cd $repo && gcap "$@"
+        fi
+    fi
+done
+
+# Identify which branch is not master.
+repo=""
+for project in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2 watertight; do
+    project_branch=`cd $HOME/git/$project && git branch --show-current`
+    if [ "$project_branch" != "master" ]; then
+        repo=$project
+    fi
+done
+
+#echo "cd $repo && cup"
+cd $HOME/git/$repo && cup

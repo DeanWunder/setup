@@ -1,12 +1,24 @@
 #!/bin/bash
 
-git switch "$1" 2> /dev/null
+# Validate arguments.
+if [ "$#" -eq "1" ]; then
+    parent="master"
+    new="$1"
+elif [ "$#" -eq "2" ]; then
+    parent="$1"
+    new="$2"
+else
+    echo "Usage: $0 <new branch>" >&2
+    echo "Usage: $0 <parent branch> <new branch>" >&2
+fi
+
+git switch "$new" 2> /dev/null
 ret="$?"
 
 # If no such branch exists
 if [ $ret -eq 128 ]; then
-    gswc $1
+    gswc $parent $new
 elif [ $ret -ne 0 ]; then
     # Other error: run echoing stderr.
-    git switch $1
+    git switch "$new"
 fi

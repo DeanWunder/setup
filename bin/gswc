@@ -1,2 +1,15 @@
 #!/bin/bash
-git switch master && git pull && git switch -c "$1"
+
+# Validate arguments.
+if [ "$#" -eq "1" ]; then
+    parent="master"
+    new="$1"
+elif [ "$#" -eq "2" ]; then
+    parent="$1"
+    new="$2"
+else
+    echo "Usage: $0 <new branch>" >&2
+    echo "Usage: $0 <parent branch> <new branch>" >&2
+fi
+
+git switch $parent && gpu && git switch -c "$new"

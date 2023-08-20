@@ -1,0 +1,10 @@
+#!/bin/bash
+
+for branch in "$@"; do
+    echo $branch
+    repo=`task_code_to_project_repo $branch`
+    echo $repo
+    checkout_master_on_project_repos
+    cd "$repo" && gsw "$branch"
+    cup
+done

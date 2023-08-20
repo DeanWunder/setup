@@ -1,0 +1,6 @@
+#!/bin/bash
+
+project=`get_project_from_current_directory`
+r:l '\.manage' | grep 'App\\Http' | tr -s ' ' | cut -d' ' -f2 |sed 's/\/{.*\?}//g' | while read line ; do
+    firefox "http://$project.test/$line"
+done

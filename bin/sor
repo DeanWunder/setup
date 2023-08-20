@@ -1,0 +1,6 @@
+#!/bin/bash
+
+{
+    s --color=none "$1" | cut -d':' -f1 | sort | uniq;
+    s --color=none "$2" | cut -d':' -f1 | sort | uniq;
+} | sort | uniq

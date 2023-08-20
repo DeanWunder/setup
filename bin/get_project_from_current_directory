@@ -1,3 +1,6 @@
 #!/bin/bash
-pwd | cut -d'/' -f5
+project=`pwd | cut -d'/' -f5`
+pwd=`pwd`
+[[ "$pwd" =~ ^/tmp.* ]] && project=`pwd | cut -d'.' -f2`
+echo $project
 

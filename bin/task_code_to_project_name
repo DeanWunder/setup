@@ -26,6 +26,6 @@ elif [[ "$1" == "SWDEL2-"* ]]; then
 elif [[ "$1" == "WAT-"* ]]; then
     echo "watertight"
 else
-    echo "Error: invalid task code" >&2
+    echo "Error: invalid task code: $1" >&2
     exit 1
 fi

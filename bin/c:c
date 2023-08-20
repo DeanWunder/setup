@@ -9,4 +9,4 @@ else
     cd /home/$USER/git/`get_project_from_current_directory`
 fi
 
-php artisan queue:work --queue=GlobalSearch,broadcastQueue,lqw,default,sync,development --memory=64000
+php artisan cache:clear

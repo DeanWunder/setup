@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Check argument exists
+if [ -z "$1" ]; then
+    echo "Usage: $0 <file path>"
+    exit 1
+fi
+
+files=""
+for project in bai bidfood cts dlp linbeck prime swconnect swdeliveryv2 rms; do
+    files="$files $HOME/git/$project/$1"
+done
+
+vim.gtk3 $files

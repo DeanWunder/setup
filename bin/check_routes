@@ -1,0 +1,178 @@
+#!/usr/bin/python3
+
+import json
+import re
+import requests
+import sys
+import time
+from pylibs.helpers import command
+
+#XSRF-TOKEN=eyJpdiI6Iml2dEhqZCtxTWRMc1pPVm8yNllTMUE9PSIsInZhbHVlIjoiMHJzMWtvNHR3ejFwRDhGZGhMWHhnVGlVOURhckU4YjlUcmlreHdTTXZwSjBreStBak1iK3JOeWlZWHl5SGphUHRhY1hXbGllN0xDS2MyZERqNFVsOHZWaGFxdXhXQ3RPeWY5UVFUTE56THhEYTVXVU9WaXJubVRTVG1sVFc2MWIiLCJtYWMiOiJhOTk3YThjNjVlODAwZmIxOTY3MGZlY2IxZWU1NGJhY2YxOTFmNGMwYTM3YTE5NTQ3MGZmMjhlYWRiYTdjNDdjIiwidGFnIjoiIn0%3D; laravel_session_development=eyJpdiI6IjZMYzZQNTlDclp2eWhMNVZCbDlZWFE9PSIsInZhbHVlIjoiVVg3c2JxY1VPbllSNUVFc1BTWkV2Rm1XS2VaYmI2VU9XZUJjbTNMWkpiWFExMXpHaURSN2QxbnJZQjYxSVRSeDluL3BwUHBpRjI4L0tpenhBdzhDbE16S0l6aGVXMFBkVmhuR0cvUE9jVHZ1eFZQcGk1c3orWTR5Sm5XdW9pdHQiLCJtYWMiOiI0MTVlYTliOGE4ZDY4MzRmNDM0NzM4MzcwYTE1ZGU0OGJhOTI0ZDcxODRkOThlYjJmZGI5NjNlNGM3YzNjZDkyIiwidGFnIjoiIn0%3D
+
+def get_sample_params():
+    sample_params = {
+        'id': [
+            '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '15', '20', '30', '40', '50', '75', '100', '150', '200', '300', '500', '1000'
+        ]
+    }
+    sample_params['activeId'] = sample_params['id']
+    sample_params['roleId'] = sample_params['id']
+    sample_params['user'] = sample_params['id']
+    sample_params['fgid'] = sample_params['id']
+    sample_params['ruleId'] = sample_params['id']
+    sample_params['messageId'] = sample_params['id']
+    sample_params['role_id'] = sample_params['id']
+    sample_params['permission_id'] = sample_params['id']
+    sample_params['cid'] = sample_params['id']
+    sample_params['employee_id'] = sample_params['id']
+    sample_params['course_id'] = sample_params['id']
+    sample_params['user_id'] = sample_params['id']
+    sample_params['year'] = sample_params['id']
+    sample_params['week'] = sample_params['id']
+    sample_params['group'] = sample_params['id']
+    sample_params['format'] = ['xlsx']
+    sample_params['enabled'] = ['0', '1']
+    sample_params['year'] = sample_params['id']
+    sample_params['week'] = sample_params['id']
+    sample_params['comment_id'] = sample_params['id']
+    sample_params['attendee_id'] = sample_params['id']
+    sample_params['company'] = sample_params['id']
+    sample_params['review_id'] = sample_params['id']
+    sample_params['userId'] = sample_params['id']
+    sample_params['competency'] = sample_params['id']
+    sample_params['report'] = sample_params['id']
+    sample_params['sid'] = sample_params['id']
+    sample_params['dcId'] = sample_params['id']
+    sample_params['taskNoticeNumber'] = sample_params['id']
+    sample_params['subProjectId'] = sample_params['id']
+    sample_params['item_id'] = sample_params['id']
+    sample_params['office'] = sample_params['id']
+    sample_params['ids'] = sample_params['id']
+    sample_params['stage_id'] = sample_params['id']
+    sample_params['wo'] = sample_params['id']
+    sample_params['incidentlog'] = sample_params['id']
+    sample_params['area'] = ['North', 'South', 'Network Services' 'West', 'Operational Services']
+    sample_params['form'] = ['E', 'O', 'F']
+    sample_params['file'] = [
+        '21/216a0a73f89e3bb6a4b3d4d900614cd3',
+        'lasagne2.jpg'
+    ]
+    sample_params['fileName'] = [
+        '21/216a0a73f89e3bb6a4b3d4d900614cd3',
+        'lasagne2.jpg'
+    ]
+    sample_params['filename'] = [
+        '21/216a0a73f89e3bb6a4b3d4d900614cd3',
+        'lasagne2.jpg'
+    ]
+    sample_params['model'] = [
+        'App\\Models\\Asset',
+        'Finao\\CMS\\Models\\Page',
+    ]
+    sample_params['action'] = ['acknowledge', 'close_out']
+    sample_params['which'] = ['managetable', 'custom', 'maximo', 'fmis', 'spdupload']
+    sample_params['status'] = ['active', 'deactivated', 'current', 'draft']
+    sample_params['type'] = ['project', 'group', 'member']
+    sample_params['isRead'] = ['0', '1']
+    sample_params['isMuted'] = ['0', '1']
+    sample_params['method'] = ['email_enabled', 'toast_enabled', 'sms_enabled'];
+    sample_params['setting'] = ['System name', 'Welcome'];
+    sample_params['query'] = ['test'];
+    sample_params['stage'] = ['initiate', 'review']
+    sample_params['workflow'] = [];
+    sample_params['key'] = []
+    sample_params['exportJob'] = [];
+    sample_params['field'] = [];
+    sample_params['comms'] = [];
+    sample_params['tube'] = []
+    sample_params['entity'] = [];
+    sample_params['slug'] = [];
+    sample_params['filter'] = [];
+    sample_params['name'] = []
+    sample_params['fallbackPlaceholder'] = []
+    sample_params['token'] = []
+
+    return sample_params
+
+def send_request(url, cookies):
+    return requests.get(url, headers={
+        'User-Agent': 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/110.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate',
+        'Referrer': 'http://prime.test/auth/login',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Cookie': cookies,
+        'Upgrade-Insecure-Requests': '1',
+    })
+
+def get_required_parameters(get_uris):
+    required_parameters = []
+    for route in get_uris:
+        route_required_parameters = route_required_params(route)
+        required_parameters.extend([x for x in route_required_parameters if x not in required_parameters]);
+    return required_parameters - get_sample_params().keys()
+
+def route_required_params(route):
+    return re.findall('{(.*?[^\?])}', route, re.DOTALL)
+
+def remove_optional_params(route):
+    route = re.sub('{[^}]*?\?}', '', route)
+    route = re.sub('//', '/', route)
+    route = re.sub('/$', '', route)
+    return route
+
+def route_fill_param(route, param, params):
+    samples = params[param]
+    return [route.replace('{' + param + '}', s) for s in samples]
+
+def route_fill_params(route):
+    filled_routes = [route]
+    params = route_required_params(route)
+    sample_params = get_sample_params()
+    for param in params:
+        new_filled_routes = []
+        for filled_route in filled_routes:
+            new_filled_routes.extend(route_fill_param(filled_route, param, sample_params))
+        filled_routes = new_filled_routes
+
+    return filled_routes
+
+def fill_required_parameters(get_uris):
+    get_uris = [remove_optional_params(r) for r in get_uris]
+    filled_routes = {r: route_fill_params(r) for r in get_uris}
+    return filled_routes
+
+if __name__ == '__main__':
+    json_string = command('php artisan route:list --json'.split(' '))
+    #with open('routes.json', 'r') as f:
+    #    json_string = f.read()
+    routes = json.loads(json_string);
+    get_uris = [route['uri'] for route in routes if 'GET' in route['method']]
+
+    #print(get_required_parameters(get_uris))
+
+    cookies = 'XSRF-TOKEN=eyJpdiI6Ims0b1lDdjlTaWxpbXJTWU01TjBQNFE9PSIsInZhbHVlIjoiSzFJZ2VMMWlUZ0lPOTBQc1BibjNwRTZuZkpyMjNvRko2MXk4YUdINGJZdTBTOUEyajdjTW42ZVFFRExQUEJCL2I0dVRWSHc3R3AxU0FaM2xQMHFsRTg4NGZIUzliL2k2U0I3bVM2VXNEcEpRRGl3VnlmMGFuQTFwZ2w2RjZuWWwiLCJtYWMiOiJlYjFhMmNhMDU4OTYxMDU3NGNlYjc5Yjk4MGFkYWYzODFhMzQwMTAzZDY3M2MyNjlmYzg3ZWZjODhkZjg3MjJhIiwidGFnIjoiIn0%3D; laravel_session_development=eyJpdiI6IjBkOVBsK2ZpK1o3YjMzS2xYeFMwS0E9PSIsInZhbHVlIjoiQ216VzlCeis4aTVHckE1cEFicXRkcWRFSmZwU2tTelBKWUJMd0loVUxaZVVwWEVTTjRiZWs5aDZ1T3lLcExSSmJrL21iSjBFaFFUZzZxOWtPcU5INitFR3pyK01FR2tWa21QdlRwYjlzL1B0RzB1LytIekpENDduOU1oMTI5SU0iLCJtYWMiOiI2OTRiYWViMzkzZTYxOGM2OWU0YzE5Y2I0Njk1YzQ0ZmIwNzkxMTNkOTVlZjQ5ZGVlNjJmNTVmNDhjNjM3YmQ0IiwidGFnIjoiIn0%3D'
+    filled_uris = fill_required_parameters(get_uris)
+    for uri in filled_uris:
+        #print('Checking ' + uri)
+        if 'auth' in uri:
+            continue
+        if '/loggedout' in uri:
+            continue
+        if '/logout' in uri:
+            continue
+        if 'timeout' in uri:
+            continue
+        if '/delete' in uri:
+            continue
+        if 'reactivate' in uri:
+            continue
+        for filled_uri in filled_uris[uri]:
+            status = send_request('http://swdeliveryv2.test/' + filled_uri, cookies).status_code
+            if status != 404 and status != 403 and status != 500:
+                if status == 200:
+                    print('   ', end='')
+                print('    Found ' + str(status) + ' at ' + filled_uri)
+
