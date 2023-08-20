@@ -34,7 +34,7 @@ def line_to_popen(line):
     repo = home + '/git/' + repo_basename
     version = re.search(r':.*"(.*)"', line).group(1)
 
-    custom_branch = re.search(r'^dev-(.*-\d+) as .*$', version)
+    custom_branch = re.search(r'^dev-([^ ]*)( as)?', version)
     if version == 'dev-master' or re.search(r'^[\^\d\.*]*$', version):
         return checkout_branch(repo, 'master')
     elif version == 'dev-bidfood' and repo_basename == 'inductiondoc':

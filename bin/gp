@@ -1,5 +1,5 @@
 #!/bin/bash
-git push "$@" 2> >(tee /tmp/gp_stderr)
+git push origin `git branch --show-current` "$@" 2> >(tee /tmp/gp_stderr)
 
 # Extract the pull request URL from git push output.
 url=`cat /tmp/gp_stderr | grep -o 'https://[^ ]*'`
@@ -29,7 +29,7 @@ fi
 projects=("bai", "bidfood", "cts", "dlp", "linbeck", "prime", "rms", "swconnect", "swdeliveryv2", "watertight")
 
 if [[ " ${projects[*]} " =~ " ${repo}" ]]; then
-    open_cicd $branch
+    cicd $branch
 fi
 
 exit 0

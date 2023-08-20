@@ -1,0 +1,32 @@
+#!/bin/bash
+
+index_models=`cat config/search.php | grep -o '[^ ].*::class' | grep -o '[^:]*' | sort | uniq`
+echo $index_modes
+
+overrides=("Finao\\CMS\\Models\\Page:../cms/src/Models/Page.php"
+"Finao\\Covid19\\Models\\Covid19Report:../covid19/src/Models/Covid19Report.php"
+"Finao\\InductionDoc\\Document:../inductiondoc/src/Document.php"
+"Finao\\Links\\Models\\Link:../links/src/Models/Link.php"
+"App\\Models\\NecPaymentClaim:app/Models/NecPaymentClaim.php")
+
+open_list=""
+for index_model in $index_models; do
+    if [[ "$index_model" =~ ^App ]]; then
+        class_name=`echo $index_model | grep -o '[a-zA-Z]*$'`
+        class_file=`s "class $class_name " --color=none | head -n 1 | cut -d':' -f1`
+        open_list="${open_list} ${class_file}"
+    else
+        if [[ "$index_model" == "class" ]]; then
+            continue
+        fi
+        for override in "${overrides[@]}" ; do
+            key="${override%%:*}"
+            value="${override##*:}"
+            if [[ "$key" == "$index_model" ]]; then
+                open_list="${open_list} ${value}"
+            fi
+        done
+    fi
+done
+
+vim.gtk3 $open_list

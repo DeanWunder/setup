@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Loop through repos
+for repo in /home/$USER/git/*; do
+    # Only those with changes in working directory
+    if [ -n "`cd $repo && git status --porcelain`" ]; then
+
+        # echo Repo name in bold/purple font.
+        basename=`basename $repo`
+        echo -e "\e[35m\e[1m$basename\e[0m\e[0m:" >> /tmp/gda
+        # echo Repo differences
+        cd $repo && gd --color=always >> /tmp/gda
+        # echo some spacing
+        echo "" >> /tmp/gda
+        echo "" >> /tmp/gda
+    fi
+done
+
+# Output all of the differences in one instance of less.
+less -rf /tmp/gda
+
+# Cleanup: Remove the tmp file created by this script.
+rm /tmp/gda

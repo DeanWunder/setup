@@ -10,12 +10,12 @@ fi
 project_name=`task_code_to_project_name $1` || { echo "Error: invalid branch name" ; exit 1; }
 project_repo="$HOME/git/$project_name"
 
-for project in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2 watertight; do
-    cd $HOME/git/$project && git stash > /dev/null && gsw master > /dev/null
-done
+checkout_master_on_project_repos
 
 wait
 
 cd $project_repo && git pull origin master 2> /dev/null && git stash > /dev/null && gsw "$1" && git pull origin "$1" 2> /dev/null
 cb
+m && sh deploy.sh
 b:u &> /dev/null &
+c:c &> /dev/null &

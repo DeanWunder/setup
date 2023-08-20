@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "$#" -ne "1" ]; then
+    echo "Usage: $0 <index prefix>"
+    exit 1
+fi
+
+index=`echo $1 | tr '[:upper:]' '[:lower:]'`
+
+curl -X DELETE "https://vpc-test-63hwf67qht5f5fealalq2tv7oe.ap-southeast-2.es.amazonaws.com:443/$index*" 

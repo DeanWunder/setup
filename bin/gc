@@ -24,5 +24,6 @@ fi
 if [ -z "$1" ]; then
     git commit
 else
-    git commit -m "$branch $@"
+    repo=`get_project_from_current_directory`
+    git commit -m "$branch $repo $@"
 fi

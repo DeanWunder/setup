@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$#" -ne "1" ]; then
+    echo "Usage: $0 <bai|bidfood|cts|dlp|linbeck|prime|rms|swconnect|swdelivery>"
+    exit 1
+fi
+
+kgc $1
+vim.gtk3 "$HOME/Downloads/configmap/$1.yaml"
+kaf $1
+
