@@ -1,7 +1,6 @@
 #!/bin/bash
 
 if xrandr | grep 'eDP-1 connected primary' | grep '+0+0'; then
-    echo "hi";
     # Resurrect i3 for home setup
     i3-resurrect restore --workspace 1
     i3-resurrect restore --workspace 2
