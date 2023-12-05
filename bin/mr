@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Validate arguments
+if [ "$#" -lt "1" ]; then
+    echo "Usage: $0 <routename>" >&2
+    exit 1;
+fi
+
+mkdir Routes
+cp -n "$HOME/setup/templates/Route.php" "./Routes/$1Route.php"
+vim.gtk3 -c "/\\[[A-Z]*\\]" "./Routes/$1Route.php"

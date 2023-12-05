@@ -41,6 +41,10 @@ su -c "ln -s $SCRIPT_DIR/vimrc $HOME_USER/.vimrc" $USERNAME > /dev/null
 rm $HOME_USER/.bashrc > /dev/null
 su -c "ln -s $SCRIPT_DIR/bashrc $HOME_USER/.bashrc" $USERNAME > /dev/null
 
+# i3 config
+rm $HOME_USER/.i3/config > /dev/null
+su -c "ln -s $SCIPT_DIR/i3config $HOME_USER/.i3/config" $USERNAME > /dev/null
+
 # Git
 echo "Setting email and name for git config"
 su -c "git config --global user.email \"$EMAIL\"" $USERNAME

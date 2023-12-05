@@ -10,17 +10,13 @@ if [ -z "$repo" ]; then
     repo=`task_code_to_project_name $branch`
 fi
 
-# Only open the URL if there are more changes than just composer.(json|lock)
-others=`git diff --name-only origin/master $branch | grep -v '^composer.json$' | grep -v '^composer.lock$'`
-if [ $? -eq 0 ]; then
-    # Only open the URL if it hasn't been opened before
-    cat $HOME/setup/log/pull_requests | grep "$repo $branch" > /dev/null
-    if [ $? -eq 1 ]; then
-        # Only open URL if there is a URL found
-        if [ -n "$url" ]; then
-            echo "$repo $branch $url" >> $HOME/setup/log/pull_requests
-            firefox $url
-        fi
+# Only open the URL if it hasn't been opened before
+cat $HOME/setup/log/pull_requests | grep "$repo $branch" > /dev/null
+if [ $? -eq 1 ]; then
+    # Only open URL if there is a URL found
+    if [ -n "$url" ]; then
+        echo "$repo $branch $url" >> $HOME/setup/log/pull_requests
+        firefox $url
     fi
 fi
 

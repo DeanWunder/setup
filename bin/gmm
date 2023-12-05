@@ -1,3 +1,4 @@
 #!/bin/bash
 
-gm master
+branch=`git branch --show-current`
+gsw master && gpu && gsw "$branch" && gm master

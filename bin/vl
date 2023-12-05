@@ -1,4 +1,0 @@
-#!/bin/bash
-
-files=("${@/#/resources\/lang\/en\/}")
-vim.gtk3 ${files[*]}

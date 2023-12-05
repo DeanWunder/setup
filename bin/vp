@@ -1,4 +1,0 @@
-#!/bin/bash
-
-files=("${@/#/database\/seeders\/Permissions\/}")
-vim.gtk3 ${files[*]}

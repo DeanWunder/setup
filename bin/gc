@@ -1,6 +1,12 @@
 #!/bin/bash
 branch=`git branch --show-current`
 
+# Don't add commits directly to inductiondoc/bidfood, links/dlp, links/swd
+if [ "$branch" = "bidfood" ] || [ "$branch" = "dlp" ] || [ "$branch" = "swd" ]; then
+    echo "Error: cannot commit to bidfood/dlp/swd package branches."
+    exit 1
+fi
+
 # If currently on the master branch, swap to a branch name from
 # whichever project repo is not on master.
 if [ "$branch" = "master"  ]; then

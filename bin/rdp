@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Route diff: given a branch, compare the routes with those on the master branch.
+
+branch=`git branch --show-current`
+
+project=`get_project_from_current_directory`
+
+gsw master &> /dev/null && 
+    cb > /dev/null && 
+    php artisan route:list --json |
+    jq 'map(.uri)' |
+    sort |
+    uniq |
+    sed 's/[ \",]//g' |
+    grep -v '\[' |
+    grep -v '\]' > "/tmp/rd.$project.master.uris"
+
+gsw "$branch" &> /dev/null && 
+    cb > /dev/null && 
+    php artisan route:list --json |
+    jq 'map(.uri)' |
+    sort |
+    uniq |
+    sed 's/[ \",]//g' |
+    grep -v '\[' |
+    grep -v '\]' > "/tmp/rd.$project.$branch.uris"
+
+echo "URIS IN MASTER"
+comm -23 "/tmp/rd.$project.master.uris" "/tmp/rd.$project.$branch.uris" > "/tmp/rd.$project.diff.master.uris"
+cat "/tmp/rd.$project.diff.master.uris"
+echo "URIS IN $branch"
+comm -13 "/tmp/rd.$project.master.uris" "/tmp/rd.$project.$branch.uris" > "/tmp/rd.$project.diff.$branch.uris"
+cat "/tmp/rd.$project.diff.$branch.uris"
+echo "URIS IN BOTH"
+comm -12 "/tmp/rd.$project.master.uris" "/tmp/rd.$project.$branch.uris" > "/tmp/rd.$project.diff.both.uris"
+cat "/tmp/rd.$project.diff.both.uris"

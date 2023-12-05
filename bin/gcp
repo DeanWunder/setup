@@ -1,2 +1,2 @@
 #!/bin/bash
-gc "$@" && gp
+git cherry-pick "$@"

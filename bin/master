@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for repo in $HOME/git/*; do
+    cd $repo && git stash && gsw master
+done

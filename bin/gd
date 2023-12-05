@@ -1,2 +1,2 @@
 #!/bin/bash
-git diff "$@"
+gaa && git diff --staged "$@"

@@ -1,4 +1,5 @@
 #!/bin/bash
 find | grep -i --color=always "$@" | \
     grep -v '^[^:]*vendor/' | \
-    grep -v '^[^:]*node_modules/'
+    grep -v '^[^:]*node_modules/' | \
+    cut -c 3-

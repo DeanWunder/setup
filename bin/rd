@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Route diff: given a branch, compare the routes with those on the master branch.
+
+if [ "$#" -ne "1" ]; then
+    echo "Usage $0 <branch to compare>" >&2
+    exit 1;
+fi
+
+project=`get_project_from_current_directory`
+
+gsw master &> /dev/null && 
+    cb > /dev/null && 
+    php artisan route:list --json |
+    jq 'map(.name)' |
+    sort |
+    uniq |
+    sed 's/[ \",]//g' |
+    grep -v '\[' |
+    grep -v '\]' > "/tmp/rd.$project.master.names"
+
+gsw "$1" &> /dev/null && 
+    cb > /dev/null && 
+    php artisan route:list --json |
+    jq 'map(.name)' |
+    sort |
+    uniq |
+    sed 's/[ \",]//g' |
+    grep -v '\[' |
+    grep -v '\]' > "/tmp/rd.$project.$1.names"
+
+echo "NAMES IN MASTER"
+comm -23 "/tmp/rd.$project.master.names" "/tmp/rd.$project.$1.names" > "/tmp/rd.$project.diff.master.names"
+cat "/tmp/rd.$project.diff.master.names"
+echo "NAMES IN $1"
+comm -13 "/tmp/rd.$project.master.names" "/tmp/rd.$project.$1.names" > "/tmp/rd.$project.diff.$1.names"
+cat "/tmp/rd.$project.diff.$1.names"
+echo "NAMES IN BOTH"
+comm -12 "/tmp/rd.$project.master.names" "/tmp/rd.$project.$1.names" > "/tmp/rd.$project.diff.both.names"
+cat "/tmp/rd.$project.diff.both.names"
+
+for line in `cat "/tmp/rd.$project.diff.master.names"`; do
+    line=`echo "$line" | sed 's/\./\\\\./g'`
+    s "$line"
+done

@@ -14,7 +14,10 @@ def version_alias(package):
     composer_json = '/home/deanw/git/' + package + '/composer.json'
     with open(composer_json) as cjfile:
         full_json = json.load(cjfile)
-        alias = full_json['extra']['branch-alias']['dev-master']
+        if 'branch-alias' in full_json['extra']:
+            alias = full_json['extra']['branch-alias']['dev-master']
+        else:
+            alias = '1.x-dev'
         return alias
 
 def update_composer_json(composer_json, states):

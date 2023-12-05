@@ -9,6 +9,7 @@ for repo in /home/$USER/git/*; do
         basename=`basename $repo`
         echo -e "\e[35m\e[1m$basename\e[0m\e[0m:" >> /tmp/gda
         # echo Repo differences
+        cd $repo && ga -N .
         cd $repo && gd --color=always >> /tmp/gda
         # echo some spacing
         echo "" >> /tmp/gda

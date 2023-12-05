@@ -5,4 +5,10 @@ import sys
 
 routes = json.load(sys.stdin)
 for route in routes:
-    print(route['method'], route['uri'], route['name'], route['action'])
+    print(
+        route['method'],
+        route['uri'],
+        route['name'],
+        route['action'],
+        route['middleware']
+    )

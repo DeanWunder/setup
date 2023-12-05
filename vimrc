@@ -10,7 +10,6 @@ call plug#end()
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gD <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-
 syntax on
 filetype indent plugin on
 set scrolloff=999
@@ -127,3 +126,9 @@ cabb wQ wq
 cabb Wn wn
 cabb WN wn
 cabb wN wn
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
