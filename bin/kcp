@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    >&2 echo "Usage: $0 <file> [branch]"
+fi
+
+if [ -z "$2" ]; then
+    branch=`get_current_project_repo_branch`
+else
+    branch="$2"
+fi
+branch=`echo "$branch" | tr '[:upper:]' '[:lower:]'`
+
+repo=`get_project_from_current_directory`
+
+if [ `pwd` != "$HOME/git/$repo" ]; then
+    >&2 echo "Error: kcp must be run from the root dir of project repo."
+    exit 1
+fi
+
+pod=`kp "$branch" | grep "Running" | grep "$branch-deploy" | tr -s ' '`
+if [ -z "$pod" ]; then
+    echo "Error: no such running pod $branch"
+    exit 1
+fi
+namespace=$(echo "$pod" | cut -d' ' -f1)
+name=$(echo "$pod" | cut -d' ' -f2)
+
+kubectl cp "$1" "$name":/var/www/"$1" -n "$namespace" -c php

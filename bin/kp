@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# kp: kubectl get pod
+
+if [ -z "$1" ]; then
+    branch=".*"
+else
+    branch=`echo "$1" | tr '[:upper:]' '[:lower:]'`
+fi
+pods=`kubectl get pods -A`
+ret=$?
+if [ $ret -eq 1 ]; then
+    echo "Set AWS environment variables first."
+    firefox https://finao-aus.awsapps.com/start#/
+    exit 1;
+fi
+
+pods=`echo "$pods" | grep "$branch"`
+
+if [ -z "$pods" ]; then
+    >&2 echo "Error: no such running pod $branch"
+    exit 1
+fi
+
+echo "$pods"

@@ -5,6 +5,5 @@ grep --color=always --exclude-from=$HOME/setup/grep_exclusions \
     --exclude-dir=node_modules \
     --exclude-dir=storage \
     --exclude-dir=build \
-    --exclude-dir=libs \
     --exclude-dir=.git -ri "$@"
 

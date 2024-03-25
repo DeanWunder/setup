@@ -1,5 +1,5 @@
 #!/bin/bash
 
-for project in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2 watertight; do
+for project in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2 ; do
     cd $HOME/git/$project && git stash --include-untracked > /dev/null && gsw master > /dev/null
 done

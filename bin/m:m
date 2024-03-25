@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# make:migration
+
+# If not in a project repo, default to prime.
+if ! current_repo_is_project_repo ; then
+    cd $HOME/git/prime
+
+# If in a project repo, ensure we are in root dir to run artisan
+else
+    cd $HOME/git/`get_project_from_current_directory`
+fi
+
+project=`get_project_from_current_directory`
+php artisan make:migration "$@"
+
+most_recent_migration=`\
+    ls -l $HOME/git/$project/database/migrations \
+        | tail -n 1 \
+        | tr -s ' ' \
+        | cut -d' ' -f9 \
+`
+
+vim.gtk3 "$HOME/git/$project/database/migrations/$most_recent_migration" -c "/\/\/"

@@ -11,7 +11,9 @@ fi
 
 rm -rf ./public/build/js/*;
 rm -rf ./public/build/css/*;
+rm -rf ./public/build/fonts/*;
 rm -rf ./public/css/*
+rm -rf ./public/js/*
 php artisan vendor:publish --tag=public --force
 php artisan vendor:publish --tag=base --force
 
@@ -19,4 +21,3 @@ php artisan vendor:publish --tag=base --force
 npm ci;
 
 php artisan base:update;
-npm run dev

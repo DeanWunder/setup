@@ -1,15 +1,31 @@
-" Disable Coc version plugin
 let g:coc_disable_startup_warning = 1
 
 call plug#begin()
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'jwalton512/vim-brade'
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'jwalton512/vim-brade'
+    Plug 'neomake/neomake'
+    Plug 'adoy/vim-php-refactoring-toolbox'
+    Plug 'tobyS/pdv'
+    Plug 'mhinz/vim-signify'
+    Plug 'nrocco/vim-phplint'
+    Plug 'phpstan/vim-phpstan'
 call plug#end()
 
-" key mappings example
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gD <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+let g:phpstan_analyse_level = 4
+
+" Full config: when writing or reading a buffer, and on changes in insert and
+" normal mode (after 500ms; no delay when writing).
+call neomake#configure#automake('nrwi', 500)
+let g:neomake_open_list = 2
+
+set updatetime=100
+set signcolumn=yes
+highlight clear SignColumn
+
 syntax on
 filetype indent plugin on
 set scrolloff=999
@@ -74,12 +90,10 @@ set formatoptions+=j
 set hidden
 " Increase undo limit.
 set history=1000
-color industry
 set cursorline
 hi CursorLine cterm=none ctermbg=234
 hi CursorLineNR cterm=none ctermbg=234
 hi Normal ctermbg=232
-set signcolumn=no
 
 " Don't crowd git diffs by inserting \n at end of file.
 set nofixendofline
@@ -132,3 +146,14 @@ autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \   exe "normal! g`\"" |
      \ endif
+
+let g:jellybeans_overrides = {
+\    'background': { 'guibg': '000000' },
+\}
+color jellybeans
+
+let g:PHP_noArrowMatching = 1
+
+" Highlight trailing whitespace
+:highlight ExtraWhitespace ctermbg=grey guibg=blue
+:match ExtraWhitespace /\s\+$/

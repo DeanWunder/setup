@@ -3,6 +3,7 @@ alias awsdb='ssh -i ~/DeanRoot.pem -p 9113 ubuntu@3.104.110.233'
 alias gs='git status'
 PATH="/home/dean/bin:$PATH"
 NT_PATH="$HOME/.nt_path"
+NT_BRANCH="$HOME/.nt_branch"
 
 cd /home/deanw/git
 if [ -f $NT_PATH ]; then
@@ -10,11 +11,19 @@ if [ -f $NT_PATH ]; then
     cd "$path"
 fi
 
-nt () {
-    next_task "$@"
+ntq () {
+    next_task "$@" --quick
     path=`task_code_to_project_repo "$1"`
     cd $path
     echo "$path" > $NT_PATH
+}
+
+nt () {
+    path=`task_code_to_project_repo "$1"`
+    cd $path
+    echo "$path" > $NT_PATH
+    echo "$1" > $NT_BRANCH
+    next_task "$@"
 }
 
 vim () {
@@ -46,10 +55,21 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-vv() {
-    v_shortcut "resources/views/" "$@"
+# vim repo root
+_() {
+    v_shortcut "." "$@"
 }
-# Tab completion for vcsv
+__()
+{
+    _fullpath "."
+    _complete "$@"
+}
+complete -F __ -o nospace _
+
+# vim view
+vv() {
+    v_shortcut "resources/views" "$@"
+}
 _vv()
 {
     _fullpath "resources/views"
@@ -57,10 +77,10 @@ _vv()
 }
 complete -F _vv -o nospace vv
 
+# vim controller
 vc() {
-    v_shortcut "app/Http/Controllers/" "$@"
+    v_shortcut "app/Http/Controllers" "$@"
 }
-# Tab completion for vcsv
 _vc()
 {
     _fullpath "app/Http/Controllers"
@@ -68,10 +88,10 @@ _vc()
 }
 complete -F _vc -o nospace vc
 
+# vim form
 vf() {
-    v_shortcut "app/Forms/" "$@"
+    v_shortcut "app/Forms" "$@"
 }
-# Tab completion for vcsv
 _vf()
 {
     _fullpath "app/Forms"
@@ -79,10 +99,10 @@ _vf()
 }
 complete -F _vf -o nospace vf
 
+# vim lang
 vl() {
-    v_shortcut "resources/lang/en/" "$@"
+    v_shortcut "resources/lang/en" "$@"
 }
-# Tab completion for vcsv
 _vl()
 {
     _fullpath "resources/lang/en"
@@ -90,10 +110,10 @@ _vl()
 }
 complete -F _vl -o nospace vl
 
+# vim model
 vm() {
-    v_shortcut "app/Models/" "$@"
+    v_shortcut "app/Models" "$@"
 }
-# Tab completion for vcsv
 _vm()
 {
     _fullpath "app/Models"
@@ -101,10 +121,10 @@ _vm()
 }
 complete -F _vm -o nospace vm
 
+# vim permission
 vp() {
-    v_shortcut "database/seeders/Permissions/" "$@"
+    v_shortcut "database/seeders/Permissions" "$@"
 }
-# Tab completion for vcsv
 _vp()
 {
     _fullpath "database/seeders/Permissions"
@@ -112,10 +132,10 @@ _vp()
 }
 complete -F _vp -o nospace vp
 
+# vim export
 ve() {
-    v_shortcut "resources/exports/" "$@"
+    v_shortcut "resources/exports" "$@"
 }
-# Tab completion for vcsv
 _ve()
 {
     _fullpath "resources/exports"
@@ -123,16 +143,38 @@ _ve()
 }
 complete -F _ve -o nospace ve
 
+# vim csv export
 vcsv() {
-    v_shortcut "resources/lang/en/csv/" "$@"
+    v_shortcut "resources/lang/en/csv" "$@"
 }
-# Tab completion for vcsv
 _vcsv()
 {
     _fullpath "resources/lang/en/csv"
     _complete "$@"
 }
 complete -F _vcsv -o nospace vcsv
+
+# vim migration
+vmi() {
+    v_shortcut "database/migrations" "$@"
+}
+_vmi()
+{
+    _fullpath "database/migrations"
+    _complete "$@"
+}
+complete -F _vmi -o nospace vmi
+
+# vim notification
+vn() {
+    v_shortcut "database/seeders/Notifications" "$@"
+}
+_vn()
+{
+    _fullpath "database/seeders/Notifications"
+    _complete "$@"
+}
+complete -F _vn -o nospace vn
 
 # Helpers
 v_shortcut() {
@@ -144,7 +186,7 @@ v_shortcut() {
 prefix_files() {
     prefix="$1"
     shift
-    files=$(echo " $@" | sed "s| | /home/$USER/git/"`get_project_from_current_directory`"/$prefix|g")
+    files=$(echo " $@" | sed "s| | /home/$USER/git/"`get_project_from_current_directory`"/$prefix/|g")
 }
 _fullpath() {
     dir="/home/$USER/git/"`get_project_from_current_directory`"/$1"

@@ -23,8 +23,6 @@ elif [[ "$1" == "SWCON2-"* ]]; then
     echo "swconnect"
 elif [[ "$1" == "SWDEL2-"* ]]; then
     echo "swdeliveryv2"
-elif [[ "$1" == "WAT-"* ]]; then
-    echo "watertight"
 else
     echo "Error: invalid task code: $1" >&2
     exit 1

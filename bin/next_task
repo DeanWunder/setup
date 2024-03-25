@@ -16,6 +16,9 @@ wait
 
 cd $project_repo && git pull origin master 2> /dev/null && git stash > /dev/null && gsw "$1" && git pull origin "$1" 2> /dev/null
 cb
-m && sh deploy.sh
-b:u &> /dev/null &
-c:c &> /dev/null &
+
+if [ "$2" != "--quick" ]; then
+    m && sh deploy.sh
+    b:u &> /dev/null &
+    c:c &> /dev/null &
+fi

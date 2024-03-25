@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for repo in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2; do
+    cd "$HOME/git/$repo" && gca "$1"
+done
+
+gsa

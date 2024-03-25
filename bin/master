@@ -1,5 +1,7 @@
 #!/bin/bash
 
 for repo in $HOME/git/*; do
-    cd $repo && git stash && gsw master
+    cd $repo && git stash > /dev/null && gsw master > /dev/null
 done
+
+gsa

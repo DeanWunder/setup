@@ -6,7 +6,7 @@ import subprocess
 import time
 from pylibs.helpers import command, get_project_name, get_project_path
 from pylibs.repo_state import get_repo_state_except_masters
-    
+
 # Prior to running: Ensure commits are pushed in package repos.
 # Ensure any changes to project repo to be included are added to staging.
 if __name__ == '__main__':
@@ -15,33 +15,13 @@ if __name__ == '__main__':
     print(command('gsa'))
     print('')
 
-    # Save repo state to tmp file as it will be required for ap
-    time = str(round(time.time()))
-    no_masters = get_repo_state_except_masters()
-    project_name = get_project_name()
-    with open('/tmp/cup.' + project_name + '.' + time + '.branches', 'w') as f:
-        json.dump(no_masters, f)
-
-    # Update composer.json prior to work in temporary directory
+    # Update composer.json
     project_path = get_project_path()
     print(command('uc', dir=project_path))
+    print(command('gd', dir=project_path))
 
-    # Copy all repo contents into temporary directory
-    tmpfile_prefix = '/tmp/cup.' + project_name + '.' + time
-    tmpfile = tmpfile_prefix + '.repo'
-    command([
-        'rsync', 
-        '-r', 
-        '--exclude=/vendor/',
-        '--exclude=node_modules/',
-        '--exclude=public/css/',
-        '--exclude=public/fonts/',
-        '--exclude=public/js/',
-        '--exclude=public/vendor/',
-        '--exclude=public/resources/',
-        '--exclude=public/mix-manifest.json',
-        project_path + '/', 
-        tmpfile
-    ]);
+    # Wait for packages to become available
+    time.sleep(10)
 
-    subprocess.Popen(['cup_background_process', tmpfile_prefix])
+    print(command('cu', dir=project_path))
+    print(command(['gcap', 'Update packages'], dir=project_path))

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+branch=`cat ~/.nt_branch`
+if [ -z "$branch" ]; then
+    branch=`get_current_branch`
+fi
+
+echo "$branch"

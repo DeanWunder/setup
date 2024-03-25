@@ -26,8 +26,6 @@ elif [ $prefix == "LIN" ]; then
     project_name="linbeck"
 elif [ $prefix == "SWDEL2" ]; then
     project_name="swdv2"
-elif [ $prefix == "WAT" ]; then
-    project_name="Watertight"
 else
     echo "Error: Branch prefix unknown."
     exit 1
