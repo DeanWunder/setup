@@ -6,6 +6,7 @@ DB::table('site_settings')->where('name', 'Login background')->update(['value' =
 
 DB::table('users')
     ->where('email', 'terry@finao.com.au')
+    ->orWhere('email', 'admin@finao.com.au')
     ->update([
         'email' => 'admin@finao.com.au',
         'first_name' => 'finao',

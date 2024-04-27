@@ -1,7 +1,7 @@
 let g:coc_disable_startup_warning = 1
 
 call plug#begin()
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    "Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'jwalton512/vim-brade'
     Plug 'neomake/neomake'
     Plug 'adoy/vim-php-refactoring-toolbox'

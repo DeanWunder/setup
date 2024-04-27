@@ -1,5 +1,7 @@
 #!/bin/bash
 
+gaa
+
 for line in `git status --short | cut -d' ' -f3`; do
     echo $line
     kcp $line
