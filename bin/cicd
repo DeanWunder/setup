@@ -1,10 +1,10 @@
 #!/bin/bash
 if [ -z "$1" ]; then
-    echo "Usage: $0 <branch>"
-    exit 1
+    branch=`get_current_project_repo_branch`
+else
+    branch="$1"
 fi
 
-branch="$1"
 prefix=`echo $branch | cut -d'-' -f1`
 
 # Convert branch prefix to cicd name.
@@ -16,8 +16,8 @@ elif [ $prefix == "SWCON2" ]; then
     project_name="swcv2"
 elif [ $prefix == "TFNSW" ]; then
     project_name="RMS"
-elif [ $prefix == "BID" ]; then
-    project_name="Bidfood"
+elif [ $prefix == "MET" ]; then
+    project_name="Metro"
 elif [ $prefix == "BAI" ]; then
     project_name="bai"
 elif [ $prefix == "CTS" ]; then

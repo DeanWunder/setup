@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for repo in bai bidfood cts dlp linbeck prime rms swconnect swdeliveryv2; do
+for repo in bai cts dlp linbeck prime rms metro swconnect swdeliveryv2; do
     cd "$HOME/git/$repo" && gcap "$1"
 done
 

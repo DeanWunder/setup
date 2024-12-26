@@ -19,6 +19,6 @@ cb
 
 if [ "$2" != "--quick" ]; then
     m && sh deploy.sh
-    b:u &> /dev/null &
-    c:c &> /dev/null &
+    b:u &> /dev/null
+    c:c &> /dev/null
 fi

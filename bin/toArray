@@ -1,0 +1,5 @@
+#!/bin/bash
+
+s 'old(' --color=none | grep -o 'old([^\)]*)' | cut -d "'" -f2 | sort | uniq > /tmp/olds
+PROJECT=`get_project_from_current_directory`
+cd "$HOME/git/$PROJECT" && echo "\$model=$1::class;collect(\$model::first()->toArray())->filter(fn (\$val, \$key) => collect(\$model::first()->attributesToArray())->keys()->doesntContain(\$key))->keys()->sort()->values()->filter(fn (\$key) => collect(file('/tmp/olds', FILE_IGNORE_NEW_LINES))->contains(\$key));" | php artisan tinker

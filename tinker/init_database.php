@@ -18,7 +18,7 @@ DB::table('users')->update([
     'photo' => null, 
     'password' => Hash::make('password')
 ]);
-DB::table('comms_users')->update([
+/*DB::table('comms_users')->update([
     'password' => Hash::make('password')
-]);
+]);*/
 

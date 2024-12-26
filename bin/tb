@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Tag and backport
+
+set -x
+
+git switch master && \
+git pull origin master --tags
+
+most_recent_tag=`git tag | sort -V | tail -n 1`
+
+major=`echo "$most_recent_tag" | cut -d'.' -f1`
+minor=`echo "$most_recent_tag" | cut -d'.' -f2`
+patch=`echo "$most_recent_tag" | cut -d'.' -f3`
+
+prev_minor=$(($minor-1))
+new_patch=$(($patch+1))
+
+most_recent_minor_tag=`git tag | grep "^$major.$prev_minor" | sort -V | tail -n 1`
+second_patch=`echo "$most_recent_minor_tag" | cut -d'.' -f3`
+second_patch=$(($second_patch+1))
+
+new_patch_tag="$major.$minor.$new_patch"
+new_minor_tag="$major.$prev_minor.$second_patch"
+
+
+git tag "$new_patch_tag" && \
+git checkout "$most_recent_minor_tag" && \
+git cherry-pick $@ && \
+git tag "$new_minor_tag" && \
+git push --tags && \
+git switch master

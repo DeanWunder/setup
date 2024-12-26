@@ -1,0 +1,11 @@
+#!/bin/bash
+current_project=`get_project_from_current_directory`
+
+for project in bai cts dlp linbeck prime rms swconnect swdeliveryv2; do
+    if [ "$current_project" = "$project" ]; then
+        continue
+    fi
+    echo "DIFF $current_project $project"
+    diff "./$1" "$HOME/git/$project/$1"
+    echo ""
+done

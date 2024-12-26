@@ -3,5 +3,5 @@
 for branch in "$@"; do
     repo=`task_code_to_project_repo $branch`
     cd "$repo" && gsw "$branch"
-    gsa
 done
+gsa

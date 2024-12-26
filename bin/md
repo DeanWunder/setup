@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# If not in a project repo, default to prime.
+if ! current_repo_is_project_repo ; then
+    cd /home/$USER/git/prime
+
+# If in a project repo, ensure we are in root dir to run artisan
+else
+    cd /home/$USER/git/`get_project_from_current_directory`
+fi
+
+php artisan make:deploytask $@

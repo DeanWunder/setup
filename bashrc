@@ -11,6 +11,14 @@ if [ -f $NT_PATH ]; then
     cd "$path"
 fi
 
+# r: Reset (clear terminal)
+r () {
+    branch=`cat ~/.nt_branch`
+    repo=`task_code_to_project_repo $branch`
+    cd "$repo"
+    clear
+}
+
 ntq () {
     next_task "$@" --quick
     path=`task_code_to_project_repo "$1"`
@@ -28,9 +36,9 @@ nt () {
 
 vim () {
     if [ -z "$@" ]; then
-        vim.gtk3
+        ~/neovim/build/bin/nvim
     fi
-    cd "$1" 2> /dev/null || vim.gtk3 "$@"
+    cd "$1" 2> /dev/null || ~/neovim/build/bin/nvim "$@"
 }
 
 v () {
@@ -101,11 +109,11 @@ complete -F _vf -o nospace vf
 
 # vim lang
 vl() {
-    v_shortcut "resources/lang/en" "$@"
+    v_shortcut "lang/en" "$@"
 }
 _vl()
 {
-    _fullpath "resources/lang/en"
+    _fullpath "lang/en"
     _complete "$@"
 }
 complete -F _vl -o nospace vl
@@ -207,3 +215,5 @@ _complete() {
         COMPREPLY[i]="$file"
     done
 }
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
