@@ -37,12 +37,6 @@ def line_to_popen(line):
     custom_branch = re.search(r'^dev-([^ ]*)( as)?', version)
     if version == 'dev-master' or re.search(r'^[\^\d\.*]*$', version):
         return checkout_branch(repo, 'master')
-    elif version == 'dev-bidfood' and repo_basename == 'inductiondoc':
-        return checkout_branch(repo, 'bidfood')
-    elif version == 'dev-dlp' and repo_basename == 'links':
-        return checkout_branch(repo, 'dlp')
-    elif version == 'dev-swd' and repo_basename == 'links':
-        return checkout_branch(repo, 'swd')
     elif custom_branch:
         return checkout_branch(repo, custom_branch.group(1))
 
@@ -69,6 +63,6 @@ if __name__ == '__main__':
     for popen in popens:
         if popen:
             popen.wait()
-    
+
     # Print out the current branch for all repos.
     print(command('gsa'))

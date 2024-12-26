@@ -35,12 +35,6 @@ def update_composer_json(composer_json, states):
                 if branch == 'master':
                     if version not in ['dev-master', 'dev-master as 0.2.99', 'dev-dlp', 'dev-swd'] and not re.search(r'^[\^\d\.*]*$', version):
                         json_lines[i] = json_lines[i].replace(version, 'dev-master')
-                elif repo_basename == 'inductiondoc' and branch == 'bidfood':
-                    json_lines[i] = json_lines[i].replace(version, 'dev-bidfood')
-                elif repo_basename == 'links' and branch == 'dlp':
-                    json_lines[i] = json_lines[i].replace(version, 'dev-dlp')
-                elif repo_basename == 'links' and branch == 'swd':
-                    json_lines[i] = json_lines[i].replace(version, 'dev-swd')
                 else:
                     # Custom branch (task code)
                     version_string = 'dev-' + branch
