@@ -1,7 +1,7 @@
 #!/bin/bash
 current_project=`get_project_from_current_directory`
 
-for project in bai cts dlp linbeck prime rms swconnect swdeliveryv2; do
+for project in bai cts dlp linbeck prime rms metro swconnect swdeliveryv2; do
     if [ "$current_project" = "$project" ]; then
         continue
     fi
