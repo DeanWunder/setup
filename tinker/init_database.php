@@ -18,6 +18,10 @@ DB::table('users')->update([
     'photo' => null, 
     'password' => Hash::make('password')
 ]);
+DB::table('emails_config')
+    ->update([
+        'mode' => 'OFF',
+    ]);
 /*DB::table('comms_users')->update([
     'password' => Hash::make('password')
 ]);*/

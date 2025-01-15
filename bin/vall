@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 files=""
-for project in bai cts dlp linbeck prime swconnect swdeliveryv2 metro rms; do
+for project in prime bai cts dlp linbeck swconnect swdeliveryv2 metro rms; do
     files="$files $HOME/git/$project/$1"
 done
 
