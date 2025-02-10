@@ -1,1 +1,2 @@
-firefox https://finao-aus.awsapps.com/start#/
+source "$HOME/.bashrc"
+of firefox https://finao-aus.awsapps.com/start#/

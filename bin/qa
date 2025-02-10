@@ -1,7 +1,8 @@
 #!/bin/bash
 if [ -z "$AWS_ACCESS_KEY_ID" ]; then
     echo "Set AWS environment variables first."
-    firefox https://finao-aus.awsapps.com/start#/
+    source "$HOME/.bashrc"
+    of firefox https://finao-aus.awsapps.com/start#/
     exit 1;
 fi
 
