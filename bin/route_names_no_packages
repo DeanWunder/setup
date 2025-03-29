@@ -1,0 +1,26 @@
+#!/bin/bash
+
+route_names \
+    | grep -v ^covid19reporting\. \
+    | grep -v ^covid19report\. \
+    | grep -v ^cms\. \
+    | grep -v ^dashboard\. \
+    | grep -v ^file\. \
+    | grep -v ^filemanager\. \
+    | grep -v ^link\. \
+    | grep -v ^map\. \
+    | grep -v ^modules\. \
+    | grep -v ^workingday\. \
+    | grep -v ^nonworkingday\. \
+    | grep -v ^systemreport\. \
+    | grep -v ^dynmenuitem\. \
+    | grep -v ^dynmenu\. \
+    | grep -v ^alert\. \
+    | grep -v ^helptip\. \
+    | grep -v ^dropdown\. \
+    | grep -v ^dynmenu\. \
+    | grep -v ^postmark\. \
+    | grep -v ^test\. \
+    | grep -v ^inductiondoc\. \
+    | grep -v ^apollo\.
+

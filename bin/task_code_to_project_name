@@ -11,8 +11,6 @@ elif [[ "$1" == "MET-"* ]]; then
     echo "metro"
 elif [[ "$1" == "CTS-"* ]]; then
     echo "cts"
-elif [[ "$1" == "DLP-"* ]]; then
-    echo "dlp"
 elif [[ "$1" == "LIN-"* ]]; then
     echo "linbeck"
 elif [[ "$1" == "PRIM-"* ]]; then

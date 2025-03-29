@@ -1,0 +1,31 @@
+#/bin/bash
+# Package Table - Represent all finao package changes in a markdown table
+# including git diff commands and bitbucket diff links.
+# Author: Dean Wunder
+
+if [ -z "$1" ]; then
+    branch="master"
+else
+    branch="$1"
+fi
+
+echo "| Finao Packages | Base | Target | Command | Link |" \
+    && echo "|---|---|---|---|---|"  \
+    && ( \
+        git diff "$branch" -- composer.lock \
+        | grep 'name.*finao\/' --after-context=2 \
+        | grep '^[\+\-]' -B1 \
+        | grep -e name -e version \
+        | tr -d '\n' \
+        | sed "s/[ \-\+]//g" \
+        | sed "s/version//g" \
+        | sed "s/name//g" \
+        | sed 's/"//g' \
+        | sed 's/://g' \
+        | sed "s/-//g" \
+        | sed "s/,f/,\nf/g" \
+        && echo "" \
+    ) \
+    | sed "s/,$//" \
+    | sed -r "s/([^,]*),([^,]*),([^,]*)/| \1 | \2 | \3 | \`git pull --tags \&\& git diff \2\.\.\3\` | https:\/\/bitbucket.org\/\1\/branches\/compare\/\3%0d\2#diff |/" \
+    | sed "s/org\/finao/org\/finao-aus/"

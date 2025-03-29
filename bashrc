@@ -216,19 +216,38 @@ _complete() {
     done
 }
 
+apollo() { v "$HOME/git/apollo"; }
+assets() { v "$HOME/git/assets"; }
+assignee() { v "$HOME/git/assignee"; }
+azure() { v "$HOME/git/azure"; }
+
+    echo "$1" > $NT_BRANCH
+bai() { v "$HOME/git/bai"; echo "BAI-1111" > $NT_BRANCH; echo "$HOME/git/bai" > $NT_PATH; }
+base() { v "$HOME/git/base"; }
+cts() { v "$HOME/git/cts"; echo "CTS-1111" > $NT_BRANCH; echo "$HOME/git/cts" > $NT_PATH; }
+dynmenu() { v "$HOME/git/dynmenu"; }
+filemanager() { v "$HOME/git/filemanager"; }
+fql() { v "$HOME/git/fql"; }
+history() { v "$HOME/git/history"; }
+instrumentation() { v "$HOME/git/instrumentation"; }
+jenkinstoolkit() { v "$HOME/git/jenkinstoolkit"; }
+lightsaml() { v "$HOME/git/lightsaml"; }
+linbeck() { v "$HOME/git/linbeck"; echo "LIN-1111" > $NT_BRANCH; echo "$HOME/git/linbeck" > $NT_PATH; }
+metro() { v "$HOME/git/metro"; echo "MET-1111" > $NT_BRANCH; echo "$HOME/git/metro" > $NT_PATH; }
+notifications() { v "$HOME/git/notifications"; }
+permissions() { v "$HOME/git/permissions"; }
+postmark() { v "$HOME/git/postmark"; }
+prime() { v "$HOME/git/prime"; echo "PRIM-1111" > $NT_BRANCH; echo "$HOME/git/prime" > $NT_PATH; }
+procoresocialiteprovider() { v "$HOME/git/procoresocialiteprovider"; }
+restapi() { v "$HOME/git/restapi"; }
+rms() { v "$HOME/git/rms"; echo "TFNSW-1111" > $NT_BRANCH; echo "$HOME/git/rms" > $NT_PATH; }
+search() { v "$HOME/git/search"; }
+smsloneworker() { v "$HOME/git/smsloneworker"; }
+sso-redirector() { v "$HOME/git/sso-redirector"; }
+support() { v "$HOME/git/support"; }
+swconnect() { v "$HOME/git/swconnect"; echo "SWC-1111" > $NT_BRANCH; echo "$HOME/git/swconnect" > $NT_PATH; }
+swdeliveryv2() { v "$HOME/git/swdeliveryv2"; echo "SWD-1111" > $NT_BRANCH; echo "$HOME/git/swdeliveryv2" > $NT_PATH; }
+workflow() { v "$HOME/git/workflow"; }
+zipper() { v "$HOME/git/zipper"; }
+
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-# output filter
-of() { 
-    if [ -n "$*" ]; then   
-        # write the real command to history without the prefix "of" 
-        history -s "$*"
-
-        # catch the command output
-        errorMsg=$( $* 2>&1 )
-
-        # check if the command output contains not a GTK-Warning
-        if ! $(echo $errorMsg | grep -q 'Gtk-Message'); then
-            echo $errorMsg 
-        fi
-    fi
-}

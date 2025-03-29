@@ -8,5 +8,5 @@ fi
 
 project_name=`task_code_to_project_name $branch` || { echo "Error: invalid branch name" ; exit 1; }
 
-source "$HOME/.bashrc"
+source "$HOME/setup/of"
 of firefox "https://finao-aus.atlassian.net/browse/$branch"

@@ -10,8 +10,6 @@ prefix=`echo $branch | cut -d'-' -f1`
 # Convert branch prefix to cicd name.
 if [ $prefix == "PRIM" ]; then
     project_name="Prime"
-elif [ $prefix == "DLP" ]; then
-    project_name="DLP"
 elif [ $prefix == "SWCON2" ]; then
     project_name="swcv2"
 elif [ $prefix == "TFNSW" ]; then
@@ -33,5 +31,5 @@ fi
 
 cicd=`config cicd_url`
 url="$cicd/job/$project_name/job/$branch/"
-source "$HOME/.bashrc"
+source "$HOME/setup/of"
 of firefox "$url" &

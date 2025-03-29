@@ -9,4 +9,9 @@ else
     cd /home/$USER/git/`get_project_from_current_directory`
 fi
 
-php artisan queue:clear --queue=GlobalSearch,broadcastQueue,lqw,default,sync,development
+php artisan queue:clear --queue=GlobalSearch
+php artisan queue:clear --queue=broadcastQueue
+php artisan queue:clear --queue=lqw
+php artisan queue:clear --queue=default
+php artisan queue:clear --queue=sync
+php artisan queue:clear --queue=development

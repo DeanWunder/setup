@@ -9,7 +9,7 @@ else
 fi
 pods=`kubectl get pods -A`
 ret=$?
-source "$HOME/.bashrc"
+source "$HOME/setup/of"
 if [ $ret -eq 1 ]; then
     echo "Set AWS environment variables first."
     of firefox https://finao-aus.awsapps.com/start#/

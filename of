@@ -1,0 +1,15 @@
+# output filter
+of() { 
+    if [ -n "$*" ]; then   
+        # write the real command to history without the prefix "of" 
+        history -s "$*"
+
+        # catch the command output
+        errorMsg=$( $* 2>&1 )
+
+        # check if the command output contains not a GTK-Warning
+        if ! $(echo $errorMsg | grep -q 'Gtk-Message'); then
+            echo $errorMsg 
+        fi
+    fi
+}

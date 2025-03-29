@@ -1,5 +1,5 @@
 #!/bin/bash
 
-for project in bai cts dlp linbeck prime rms metro swconnect swdeliveryv2; do
+for project in bai cts linbeck prime rms metro swconnect swdeliveryv2; do
     cd "$HOME/git/$project" && git switch "$1"
 done
