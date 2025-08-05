@@ -21,7 +21,7 @@ if __name__ == '__main__':
     print(command('gd', dir=project_path))
 
     # Wait for packages to become available
-    time.sleep(15)
+    time.sleep(25)
 
     print(command('cu', dir=project_path))
     print(command(['gcap', 'Update packages'], dir=project_path))

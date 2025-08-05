@@ -23,7 +23,7 @@ fi
 
 
 # Open CICD
-projects=("bai", "cts", "linbeck", "prime", "rms", "metro", "swconnect", "swdeliveryv2")
+projects=("bai", "cts", "linbeck", "prime", "rms", "swconnect", "swdeliveryv2")
 
 if [[ " ${projects[*]} " =~ " ${repo}" ]]; then
     cicd $branch

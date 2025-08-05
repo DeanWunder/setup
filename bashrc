@@ -233,7 +233,6 @@ instrumentation() { v "$HOME/git/instrumentation"; }
 jenkinstoolkit() { v "$HOME/git/jenkinstoolkit"; }
 lightsaml() { v "$HOME/git/lightsaml"; }
 linbeck() { v "$HOME/git/linbeck"; echo "LIN-1111" > $NT_BRANCH; echo "$HOME/git/linbeck" > $NT_PATH; }
-metro() { v "$HOME/git/metro"; echo "MET-1111" > $NT_BRANCH; echo "$HOME/git/metro" > $NT_PATH; }
 notifications() { v "$HOME/git/notifications"; }
 permissions() { v "$HOME/git/permissions"; }
 postmark() { v "$HOME/git/postmark"; }

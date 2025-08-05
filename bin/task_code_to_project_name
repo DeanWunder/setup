@@ -7,8 +7,6 @@ fi
 
 if [[ "$1" == "BAI-"* ]]; then
     echo "bai"
-elif [[ "$1" == "MET-"* ]]; then
-    echo "metro"
 elif [[ "$1" == "CTS-"* ]]; then
     echo "cts"
 elif [[ "$1" == "LIN-"* ]]; then

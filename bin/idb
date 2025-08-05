@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ "$?" != 2 ]; then
+    echo "idb: Usage: $0 <database> <dump.sql>"
+    exit 1
+fi

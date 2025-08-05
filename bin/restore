@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z "$2" ]; then
+    echo "Usage: $0 <database_dump.sql> <database_name>"
+    exit 1
+fi
+
+database_file="$1"
+database_name="$2"
+
+mysql -u root -e "drop database if exists $database_name;"
+mysql -u root -e "create database $database_name;"
+mysql -u root --database "$database_name" < "$database_file"
+

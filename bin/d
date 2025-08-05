@@ -8,7 +8,7 @@
 for repo in /home/$USER/git/*; do
     basename=`basename $repo`
     committed=0
-    for project in bai cts linbeck prime rms metro swconnect swdeliveryv2 ; do
+    for project in bai cts linbeck prime rms swconnect swdeliveryv2 ; do
         if [ "$basename" == "$project" ] ; then
             if [ -n "`cd $repo && git status --porcelain`" ]; then
                 #echo "cd $repo && gca $@"
@@ -29,7 +29,7 @@ done
 
 # Identify which branch(es) is not master.
 repo=""
-for project in bai cts linbeck prime rms metro swconnect swdeliveryv2 ; do
+for project in bai cts linbeck prime rms swconnect swdeliveryv2 ; do
     project_branch=`cd $HOME/git/$project && git branch --show-current`
     if [ "$project_branch" != "master" ]; then
         cd $HOME/git/$project && cup

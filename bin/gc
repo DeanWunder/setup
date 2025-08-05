@@ -7,7 +7,7 @@ if [ "$branch" = "master"  ]; then
 
     # Identify which branch is not master.
     branch=""
-    for project in bai cts linbeck prime rms metro swconnect swdeliveryv2 ; do
+    for project in bai cts linbeck prime rms swconnect swdeliveryv2 ; do
         project_branch=`cd $HOME/git/$project && git branch --show-current`
         if [ "$project_branch" != "master" ]; then
             branch="$project_branch"

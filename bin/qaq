@@ -1,0 +1,21 @@
+#!/bin/bash
+if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+    echo "Set AWS environment variables first."
+    source "$HOME/setup/of"
+    of firefox https://finao-aus.awsapps.com/start#/
+    exit 1;
+fi
+
+if [ -z "$1" ]; then
+    branch=`get_current_project_repo_branch`
+else
+    branch="$1"
+fi
+
+branch=`echo "$branch" | tr '[:upper:]' '[:lower:]'`
+
+pod=`kp "$branch" | grep "Running" | grep "$branch-deploy" | tr -s ' '`
+namespace=$(echo "$pod" | cut -d' ' -f1)
+name=$(echo "$pod" | cut -d' ' -f2)
+
+kubectl -n $namespace exec -it $name -c horizon -- bash

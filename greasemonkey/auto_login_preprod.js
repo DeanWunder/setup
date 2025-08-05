@@ -13,7 +13,6 @@ var preprod_hosts = [
   'preprod.tfnswdataportal.com.au',
   'preprod.swconnect.com.au',
   'preprod.swdelivery.com.au',
-  'preprod.metro.finao.com.au',
 ];
 
 $(document).ready(function() {
